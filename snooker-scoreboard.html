@@ -4,7 +4,7 @@
             .scoreBoard {
                 background-color: lightgrey;
                 border-radius: 15px;
-                width: 50%
+                float: left;
             }
             
             .ball {
@@ -22,7 +22,31 @@
             .b5 {background-color: blue;}
             .b6 {background-color: hotpink;}
             .b7 {background-color: black;}
+            .b-7 {background-color: grey;}
+            
+            .name {
+                font-size: large;
+                display: inline-block;
+            }
 
+            .score {
+                margin: 15px;
+                font-size: xx-large;
+                display: inline-block;
+            }
+
+            ul, ol{
+                list-style: none;
+            }
+
+            li {
+                border: 1px;
+                border-style: solid;
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+            }
+            
         </style>
     </head>
     <body>
@@ -31,7 +55,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
     
         <script type="text/babel">
-            const sum = (acc, v) => acc + v;
+            const sum = (a, b) => parseInt(a) + parseInt(b);
 
             class Ball extends React.Component{
                 constructor(props) {
@@ -39,7 +63,27 @@
                 }
 
                 render(){
-                    return <span className={`ball b${this.props.number}`} onClick={this.props.handler} number={this.props.number}></span>
+                    return <span className={`ball b${this.props.number}`} onClick={ (e) => this.props.handler(this.props.number)}></span>
+                }
+            }
+
+            class PotHistory extends React.Component{
+                constructor(props){
+                    super(props)
+                }
+
+                render(){
+                    return (
+                        <ul>
+
+                        {
+                            this.props.h.map((e, i) => {
+                                return <li className={`b${e}`}></li>
+                            })
+                        }
+
+                        </ul>
+                    )
                 }
             }
 
@@ -47,45 +91,64 @@
                 constructor(props) {
                     super(props);
 
-                    this.addPot = this.addPot.bind(this)
-                 
                     this.state = { 
-                                    p1: "Jogador 1",
-                                    p2: "Jogador 2",
+                                    p1: "Jogador A",
+                                    p2: "Jogador B",
                                     s1: [],
                                     s2: [],
-                                    p1Playing: false
+                                    p1Playing: true
                                  };
 
                     this.addPot = this.addPot.bind(this)
+                    this.switchPlayer = this.switchPlayer.bind(this)
                 }
-                
-                addPot(e){
-                    e.preventDefault()
-                    
-                    let b = e.target
+
+                addPot(n){
+                    if(n === "-7"){
+                        this.state.p1Playing ? 
+                            this.setState({s2: this.state.s2.concat(n * -1)}) :
+                            this.setState({s1: this.state.s1.concat(n * -1)});
+                        return
+                    }
 
                     if(this.state.p1Playing){
-                        let ns = this.state.s1.concat(b.props.number)
-                        this.setState({s1: ns, p1Playing:false})
+                        let ns = this.state.s1.concat(n)
+                        this.setState({s1: ns})
                     }else{
-                        let ns = this.state.s2.concat(b.props.number)
-                        this.setState({s2: ns, p1Playing:true})
+                        let ns = this.state.s2.concat(n)
+                        this.setState({s2: ns})
                     }
                     
+                }
+                switchPlayer(){
+                    let currentlyPlaying = this.state.p1Playing;
+                    currentlyPlaying = !currentlyPlaying
+
+                    this.setState({p1Playing: currentlyPlaying})
                 }
 
                 render(){
                     return <div className='scoreBoard'>
-                            <h1>Score Board</h1><br/>
-                            <p>{this.state.p1} {this.state.s1.reduce(sum, 0)} X {this.state.s2.reduce(sum, 0)} {this.state.p2}</p>
+                            
+                            <div className={'name'}> {this.state.p1}: </div>
+                            <div className={'score'}> {this.state.s1.reduce(sum, 0)} </div>
+                            <PotHistory h={this.state.s1} />
+                            <div className={'name'}> {this.state.p2}: </div>
+                            <div className={'score'}> {this.state.s2.reduce(sum, 0)} </div>
+                            <PotHistory h={this.state.s2} />
+
+                            <button type="button" onClick={this.switchPlayer}>Passar a vez</button>
+
+                            <p>
                             <Ball number="1" handler={this.addPot}/>
-                            <Ball number="2"/>
-                            <Ball number="3"/>
-                            <Ball number="4"/>
-                            <Ball number="5"/>
-                            <Ball number="6"/>
-                            <Ball number="7"/>
+                            <Ball number="2" handler={this.addPot}/>
+                            <Ball number="3" handler={this.addPot}/>
+                            <Ball number="4" handler={this.addPot}/>
+                            <Ball number="5" handler={this.addPot}/>
+                            <Ball number="6" handler={this.addPot}/>
+                            <Ball number="7" handler={this.addPot}/>
+                            <Ball number="-7" handler={this.addPot}/>
+                            </p>
                            </div>
                 }
             }
