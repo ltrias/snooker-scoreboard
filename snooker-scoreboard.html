@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <style type="text/css">
+            .scoreBoard {
+                background-color: lightgrey;
+                border-radius: 15px;
+                width: 50%
+            }
+            
+            .ball {
+                height: 75px;
+                width: 75px;
+                margin: 15px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+
+            .b1 {background-color: red;}
+            .b2 {background-color: yellow;}
+            .b3 {background-color: green;}
+            .b4 {background-color: brown;}
+            .b5 {background-color: blue;}
+            .b6 {background-color: hotpink;}
+            .b7 {background-color: black;}
+
+        </style>
+    </head>
+    <body>
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+    
+        <script type="text/babel">
+            const sum = (acc, v) => acc + v;
+
+            class Ball extends React.Component{
+                constructor(props) {
+                    super(props);
+                }
+
+                render(){
+                    return <span className={`ball b${this.props.number}`} onClick={this.props.handler}></span>
+                }
+            }
+
+            class ScoreBoard extends React.Component{
+                constructor(props) {
+                    super(props);
+                 
+                    this.state = { 
+                                    p1: "Jogador 1",
+                                    p2: "Jogador 2",
+                                    s1: [],
+                                    s2: [],
+                                    p1Playing: false
+                                 };
+
+                    this.addPot = this.addPot.bind(this)
+                }
+
+                componentDidMount(){
+                    this.setState({currentPlayer: this.state.s1})
+                }
+
+                addPot(b){
+                    console.log(b)
+                    if(this.state.p1Playing){
+                        let ns = this.state.s1.concat(b)
+                        this.setState({s1: ns, p1Playing:false})
+                    }else{
+                        let ns = this.state.s2.concat(b)
+                        this.setState({s2: ns, p1Playing:true})
+                    }
+                    
+                }
+
+                render(){
+                    return <div className='scoreBoard'>
+                            <h1>Score Board</h1><br/>
+                            <p>{this.state.p1} {this.state.s1.reduce(sum, 0)} X {this.state.s2.reduce(sum, 0)} {this.state.p2}</p>
+                            <Ball number="1" handler={this.addPot}/>
+                            <Ball number="2"/>
+                            <Ball number="3"/>
+                            <Ball number="4"/>
+                            <Ball number="5"/>
+                            <Ball number="6"/>
+                            <Ball number="7"/>
+                           </div>
+                }
+            }
+
+            ReactDOM.render(
+                <ScoreBoard/>,
+                document.getElementById('scoreboard')
+            );
+        </script>
+        <div id="scoreboard"></div>
+    </body>
+</html>
