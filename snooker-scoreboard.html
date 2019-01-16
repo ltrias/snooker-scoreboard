@@ -39,13 +39,15 @@
                 }
 
                 render(){
-                    return <span className={`ball b${this.props.number}`} onClick={this.props.handler}></span>
+                    return <span className={`ball b${this.props.number}`} onClick={this.props.handler} number={this.props.number}></span>
                 }
             }
 
             class ScoreBoard extends React.Component{
                 constructor(props) {
                     super(props);
+
+                    this.addPot = this.addPot.bind(this)
                  
                     this.state = { 
                                     p1: "Jogador 1",
@@ -57,18 +59,17 @@
 
                     this.addPot = this.addPot.bind(this)
                 }
+                
+                addPot(e){
+                    e.preventDefault()
+                    
+                    let b = e.target
 
-                componentDidMount(){
-                    this.setState({currentPlayer: this.state.s1})
-                }
-
-                addPot(b){
-                    console.log(b)
                     if(this.state.p1Playing){
-                        let ns = this.state.s1.concat(b)
+                        let ns = this.state.s1.concat(b.props.number)
                         this.setState({s1: ns, p1Playing:false})
                     }else{
-                        let ns = this.state.s2.concat(b)
+                        let ns = this.state.s2.concat(b.props.number)
                         this.setState({s2: ns, p1Playing:true})
                     }
                     
