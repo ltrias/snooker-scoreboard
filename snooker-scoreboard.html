@@ -96,6 +96,8 @@
                                     p2: "Jogador B",
                                     s1: [],
                                     s2: [],
+                                    p1Score: 0,
+                                    p2Score: 0,
                                     p1Playing: true
                                  };
 
@@ -104,22 +106,32 @@
                 }
 
                 addPot(n){
+                    let newState = {}
+
                     if(n === "-7"){
-                        this.state.p1Playing ? 
-                            this.setState({s2: this.state.s2.concat(n * -1)}) :
-                            this.setState({s1: this.state.s1.concat(n * -1)});
-                        return
+                        if(this.state.p1Playing){
+                            newState.s2 = this.state.s2.concat(n * -1)
+                            newState.s1 = this.state.s1 
+                        } else{
+                            newState.s1 = this.state.s1.concat(n * -1) 
+                            newState.s2 = this.state.s2
+                        }
+                    } else {
+                        if(this.state.p1Playing){
+                            newState.s1 = this.state.s1.concat(n)
+                            newState.s2 = this.state.s2
+                        }else{
+                            newState.s2 = this.state.s2.concat(n)
+                            newState.s1 = this.state.s1
+                        }
                     }
 
-                    if(this.state.p1Playing){
-                        let ns = this.state.s1.concat(n)
-                        this.setState({s1: ns})
-                    }else{
-                        let ns = this.state.s2.concat(n)
-                        this.setState({s2: ns})
-                    }
-                    
+                    newState.p1Score = newState.s1.reduce(sum, 0)
+                    newState.p2Score = newState.s2.reduce(sum, 0)
+
+                    this.setState(newState)
                 }
+
                 switchPlayer(){
                     let currentlyPlaying = this.state.p1Playing;
                     currentlyPlaying = !currentlyPlaying
@@ -131,12 +143,14 @@
                     return <div className='scoreBoard'>
                             {this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
                             <div className={'name'}> {this.state.p1}: </div>
-                            <div className={'score'}> {this.state.s1.reduce(sum, 0)} </div>
+                            <div className={'score'}> {this.state.p1Score} </div>
                             <PotHistory h={this.state.s1} />
                             {!this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
                             <div className={'name'}> {this.state.p2}: </div>
-                            <div className={'score'}> {this.state.s2.reduce(sum, 0)} </div>
+                            <div className={'score'}> {this.state.p2Score} </div>
                             <PotHistory h={this.state.s2} />
+                            <div className={'name'}> Diferença: </div>
+                            <div className={'score'}> {Math.abs(this.state.p1Score - this.state.p2Score)} </div>
 
                             <button type="button" onClick={this.switchPlayer}>Passar a vez</button>
 
