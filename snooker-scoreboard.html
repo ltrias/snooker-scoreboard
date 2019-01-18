@@ -129,10 +129,11 @@
 
                 render(){
                     return <div className='scoreBoard'>
-                            
+                            {this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
                             <div className={'name'}> {this.state.p1}: </div>
                             <div className={'score'}> {this.state.s1.reduce(sum, 0)} </div>
                             <PotHistory h={this.state.s1} />
+                            {!this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
                             <div className={'name'}> {this.state.p2}: </div>
                             <div className={'score'}> {this.state.s2.reduce(sum, 0)} </div>
                             <PotHistory h={this.state.s2} />
