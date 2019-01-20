@@ -92,8 +92,7 @@
         align-items: center;
       }
 
-      .players .avatars .avatar-one,
-      .players .avatars .avatar-two {
+      .players .avatars .avatar {
         background-color: black;
         width: 40px;
         height: 40px;
@@ -109,16 +108,7 @@
         background-position: center center;
       }
 
-      .players .avatars .avatar-one {
-        background-image: url('https://www.nwemail.co.uk/resources/images/8963268.jpg?display=1&htype=0&type=responsive-gallery');
-      }
-
-      .players .avatars .avatar-two {
-        background-image: url('https://cdn.images.express.co.uk/img/dynamic/4/590x/secondary/UK-Championship-snooker-TV-schedule-1617038.jpg?r=1544057723904');
-      }
-
-      .players .avatars .avatar-one.active,
-      .players .avatars .avatar-two.active {
+      .players .avatars .avatar.active {
         width: 80px;
         height: 80px;
         opacity: 1;
@@ -287,8 +277,7 @@
         font-weight: normal;
       }
 
-      .scores .player-score-row .avatar-one,
-      .scores .player-score-row .avatar-two {
+      .scores .player-score-row .avatar {
         background-color: black;
         width: 50px;
         height: 50px;
@@ -302,14 +291,6 @@
         background-size: 200%;
         background-position: center center;
       }
-
-      .scores .player-score-row .avatar-one {
-        background-image: url('https://www.nwemail.co.uk/resources/images/8963268.jpg?display=1&htype=0&type=responsive-gallery');
-      }
-
-      .scores .player-score-row .avatar-two {
-        background-image: url('https://cdn.images.express.co.uk/img/dynamic/4/590x/secondary/UK-Championship-snooker-TV-schedule-1617038.jpg?r=1544057723904');
-      }
     </style>
   </head>
   <body>
@@ -319,8 +300,13 @@
           return (
             <div className="players">
               <div className="avatars">
-                <div className="avatar-one" />
-                <div className="avatar-two active" />
+                {this.props.collection.map(player => (
+                  <div
+                    className="avatar"
+                    key={player.id}
+                    style={{ backgroundImage: `url(${player.avatar})` }}
+                  />
+                ))}
               </div>
               <div className="name">Player A</div>
             </div>
@@ -375,11 +361,11 @@
         }
       }
 
-      class BallList extends React.Component {
+      class Balls extends React.Component {
         render() {
           return (
             <div className="ball-list">
-              {this.props.balls.map(ball => (
+              {this.props.collection.map(ball => (
                 <Ball value={ball.value} color={ball.color} key={ball.id} />
               ))}
             </div>
@@ -391,25 +377,18 @@
         render() {
           return (
             <div className="scores">
-              <div className="player-score-row">
-                <div className="avatar-one" />
-                <div className="player-name">
-                  Player <strong>A</strong>
+              {this.props.collection.map(player => (
+                <div className="player-score-row" key={player.id}>
+                  <div
+                    className="avatar"
+                    style={{ backgroundImage: `url(${player.avatar})` }}
+                  />
+                  <div className="player-name">{player.name}</div>
+                  <div className="player-score">
+                    <span>points</span> <span className="number">80</span>
+                  </div>
                 </div>
-                <div className="player-score">
-                  <span>points</span> <span className="number">80</span>
-                </div>
-              </div>
-
-              <div className="player-score-row active">
-                <div className="avatar-two" />
-                <div className="player-name">
-                  Player <strong>B</strong>
-                </div>
-                <div className="player-score">
-                  <span>points</span> <span className="number">80</span>
-                </div>
-              </div>
+              ))}
             </div>
           );
         }
@@ -421,8 +400,20 @@
 
           this.state = {
             players: [
-              { id: 1, name: 'Player A', avatar: '', balls: [] },
-              { id: 2, name: 'Player B', avatar: '', balls: [] }
+              {
+                id: 1,
+                name: 'Player A',
+                avatar:
+                  'https://www.nwemail.co.uk/resources/images/8963268.jpg?display=1&htype=0&type=responsive-gallery',
+                balls: []
+              },
+              {
+                id: 2,
+                name: 'Player B',
+                avatar:
+                  'https://cdn.images.express.co.uk/img/dynamic/4/590x/secondary/UK-Championship-snooker-TV-schedule-1617038.jpg?r=1544057723904',
+                balls: []
+              }
             ],
             balls: [
               { id: 1, value: 2, color: '#fff176' },
@@ -444,14 +435,14 @@
                 <h1>
                   <strong>score</strong>board
                 </h1>
-                <Players />
+                <Players collection={this.state.players} />
                 <DiffPoints />
                 <PlayerTurnFab />
               </div>
               <div className="main-card">
                 <div className="content">
-                  <Scores />
-                  <BallList balls={this.state.balls} />
+                  <Scores collection={this.state.players} />
+                  <Balls collection={this.state.balls} />
                 </div>
               </div>
             </section>
