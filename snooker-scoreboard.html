@@ -50,7 +50,7 @@
         height: 100%;
       }
 
-      .players {
+      .left-card {
         position: absolute;
         top: 0;
         width: 300px;
@@ -67,7 +67,7 @@
         box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
       }
 
-      .players h1 {
+      .left-card h1 {
         font-weight: 300;
         font-size: 28px;
         text-transform: uppercase;
@@ -76,9 +76,13 @@
         color: rgba(236, 239, 244, 0.3);
       }
 
-      .players h1 strong {
+      .left-card h1 strong {
         font-weight: 300;
         color: rgba(236, 239, 244, 1);
+      }
+
+      .players {
+        text-align: center;
       }
 
       .players .avatars {
@@ -125,7 +129,11 @@
         text-transform: uppercase;
       }
 
-      .players svg {
+      .diffPoints {
+        text-align: center;
+      }
+
+      .diffPoints svg {
         margin: 25px 0px 25px 0px;
         width: 30px;
         height: 30px;
@@ -133,19 +141,19 @@
         opacity: 0.3;
       }
 
-      .players .diff {
+      .diffPoints .diff {
         text-align: center;
         font-size: 28px;
       }
 
-      .players .diff span {
+      .diffPoints .diff span {
         margin-top: 5px;
         display: block;
         font-size: 12px;
         text-transform: uppercase;
       }
 
-      .players .fab {
+      .fab {
         position: absolute;
         bottom: -25px;
         width: 70px;
@@ -162,6 +170,13 @@
         box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
 
         background-color: #f44336;
+      }
+
+      .fab svg {
+        margin: 25px 0px 25px 0px;
+        width: 30px;
+        height: 30px;
+        opacity: 0.3;
       }
 
       .main-card {
@@ -185,14 +200,14 @@
         padding: 20px;
       }
 
-      .main-card .content .ball-list {
+      .ball-list {
         display: flex;
         flex-flow: row wrap;
         height: 160px;
         padding: 25px;
       }
 
-      .main-card .content .ball-list .ball {
+      .ball-list .ball {
         width: 60px;
         height: 60px;
         border-radius: 50%;
@@ -209,7 +224,7 @@
         box-shadow: 0px 3px 26px -3px rgba(0, 0, 0, 0.41);
       }
 
-      .main-card .content .ball-list .ball::after {
+      .ball-list .ball::after {
         content: '';
         opacity: 0.2;
         width: 40px;
@@ -230,11 +245,11 @@
         border-radius: 40px / 20px;
       }
 
-      .main-card .content .scores {
+      .scores {
         width: 100%;
       }
 
-      .main-card .content .scores .player-score-row {
+      .scores .player-score-row {
         display: flex;
         padding: 30px 25px;
         flex-direction: row;
@@ -243,18 +258,18 @@
         width: calc(100% - 50px);
       }
 
-      .main-card .content .scores .player-score-row.active {
+      .scores .player-score-row.active {
         background-color: #f4f4f4;
       }
 
-      .main-card .content .scores .player-score-row .player-name {
+      .scores .player-score-row .player-name {
         font-weight: normal;
         color: #78909c;
         text-transform: uppercase;
         font-size: 14px;
       }
 
-      .main-card .content .scores .player-score-row .player-score {
+      .scores .player-score-row .player-score {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -266,14 +281,14 @@
         font-size: 10px;
       }
 
-      .main-card .content .scores .player-score-row .player-score .number {
+      .scores .player-score-row .player-score .number {
         font-size: 28px;
         margin-left: 10px;
         font-weight: normal;
       }
 
-      .main-card .content .scores .player-score-row .avatar-one,
-      .main-card .content .scores .player-score-row .avatar-two {
+      .scores .player-score-row .avatar-one,
+      .scores .player-score-row .avatar-two {
         background-color: black;
         width: 50px;
         height: 50px;
@@ -288,22 +303,68 @@
         background-position: center center;
       }
 
-      .main-card .content .scores .player-score-row .avatar-one {
+      .scores .player-score-row .avatar-one {
         background-image: url('https://www.nwemail.co.uk/resources/images/8963268.jpg?display=1&htype=0&type=responsive-gallery');
       }
 
-      .main-card .content .scores .player-score-row .avatar-two {
+      .scores .player-score-row .avatar-two {
         background-image: url('https://cdn.images.express.co.uk/img/dynamic/4/590x/secondary/UK-Championship-snooker-TV-schedule-1617038.jpg?r=1544057723904');
       }
     </style>
   </head>
   <body>
     <script type="text/babel">
-      class Ball extends React.Component {
-        constructor(props) {
-          super(props);
+      class Players extends React.Component {
+        render() {
+          return (
+            <div className="players">
+              <div className="avatars">
+                <div className="avatar-one" />
+                <div className="avatar-two active" />
+              </div>
+              <div className="name">Player A</div>
+            </div>
+          );
         }
+      }
 
+      class DiffPoints extends React.Component {
+        render() {
+          return (
+            <div className="diffPoints">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 426.667 426.667"
+              >
+                <path d="M213.333 42.667L0 384h426.667L213.333 42.667zm0 80.533l136.32 218.133H77.013L213.333 123.2z" />
+              </svg>
+
+              <div className="diff">
+                <strong>80</strong> <span>diff points</span>
+              </div>
+            </div>
+          );
+        }
+      }
+
+      class PlayerTurnFab extends React.Component {
+        render() {
+          return (
+            <div className="fab">
+              <svg
+                height="403pt"
+                viewBox="0 -26 403.24 403"
+                width="403pt"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M327.785 134.543c3.922 3.89 10.254 3.863 14.145-.059l58.41-58.91c3.879-3.91 3.867-10.219-.028-14.11L341.898 3.052c-3.906-3.906-10.238-3.906-14.14 0-3.906 3.902-3.906 10.234 0 14.14l41.34 41.344H309.03a90.46 90.46 0 0 0-71.824 35.77l-48.488 64.222-48.489-64.222a90.467 90.467 0 0 0-71.824-35.77H10c-5.523 0-10 4.477-10 10 0 5.524 4.477 10 10 10h58.398a70.36 70.36 0 0 1 55.868 27.82l51.921 68.766-51.917 68.766a70.36 70.36 0 0 1-55.868 27.82H10c-5.523 0-10 4.477-10 10s4.477 10 10 10h58.398a90.474 90.474 0 0 0 71.829-35.77l48.492-64.218 48.488 64.222a90.463 90.463 0 0 0 71.828 35.77h60.067l-41.344 41.344c-3.906 3.906-3.906 10.238 0 14.14 3.902 3.907 10.234 3.907 14.14.004l58.414-58.414c3.895-3.894 3.907-10.203.028-14.113l-58.41-58.91a10.002 10.002 0 1 0-14.203 14.082l41.515 41.867h-60.215a70.359 70.359 0 0 1-55.863-27.82l-51.918-68.77 51.918-68.766a70.36 70.36 0 0 1 55.867-27.82h60.207l-41.511 41.867c-3.891 3.922-3.864 10.254.058 14.141zm0 0" />
+              </svg>
+            </div>
+          );
+        }
+      }
+
+      class Ball extends React.Component {
         render() {
           return (
             <span
@@ -314,14 +375,54 @@
         }
       }
 
+      class BallList extends React.Component {
+        render() {
+          return (
+            <div className="ball-list">
+              {this.props.balls.map(ball => (
+                <Ball value={ball.value} color={ball.color} key={ball.id} />
+              ))}
+            </div>
+          );
+        }
+      }
+
+      class Scores extends React.Component {
+        render() {
+          return (
+            <div className="scores">
+              <div className="player-score-row">
+                <div className="avatar-one" />
+                <div className="player-name">
+                  Player <strong>A</strong>
+                </div>
+                <div className="player-score">
+                  <span>points</span> <span className="number">80</span>
+                </div>
+              </div>
+
+              <div className="player-score-row active">
+                <div className="avatar-two" />
+                <div className="player-name">
+                  Player <strong>B</strong>
+                </div>
+                <div className="player-score">
+                  <span>points</span> <span className="number">80</span>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      }
+
       class ScoreBoard extends React.Component {
         constructor(props) {
           super(props);
 
           this.state = {
             players: [
-              { id: 1, name: 'Player A', avatar: '', balls: []},
-              { id: 2, name: 'Player B', avatar: '', balls: []},
+              { id: 1, name: 'Player A', avatar: '', balls: [] },
+              { id: 2, name: 'Player B', avatar: '', balls: [] }
             ],
             balls: [
               { id: 1, value: 2, color: '#fff176' },
@@ -339,67 +440,18 @@
         render() {
           return (
             <section className="wrapper">
-              <div className="players">
+              <div className="left-card">
                 <h1>
                   <strong>score</strong>board
                 </h1>
-                <div className="avatars">
-                  <div className="avatar-one" />
-                  <div className="avatar-two active" />
-                </div>
-                <div className="name">Player A</div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 426.667 426.667"
-                >
-                  <path d="M213.333 42.667L0 384h426.667L213.333 42.667zm0 80.533l136.32 218.133H77.013L213.333 123.2z" />
-                </svg>
-                <div className="diff">
-                  <strong>80</strong> <span>diff points</span>
-                </div>
-                <div className="fab">
-                  <svg
-                    height="403pt"
-                    viewBox="0 -26 403.24 403"
-                    width="403pt"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M327.785 134.543c3.922 3.89 10.254 3.863 14.145-.059l58.41-58.91c3.879-3.91 3.867-10.219-.028-14.11L341.898 3.052c-3.906-3.906-10.238-3.906-14.14 0-3.906 3.902-3.906 10.234 0 14.14l41.34 41.344H309.03a90.46 90.46 0 0 0-71.824 35.77l-48.488 64.222-48.489-64.222a90.467 90.467 0 0 0-71.824-35.77H10c-5.523 0-10 4.477-10 10 0 5.524 4.477 10 10 10h58.398a70.36 70.36 0 0 1 55.868 27.82l51.921 68.766-51.917 68.766a70.36 70.36 0 0 1-55.868 27.82H10c-5.523 0-10 4.477-10 10s4.477 10 10 10h58.398a90.474 90.474 0 0 0 71.829-35.77l48.492-64.218 48.488 64.222a90.463 90.463 0 0 0 71.828 35.77h60.067l-41.344 41.344c-3.906 3.906-3.906 10.238 0 14.14 3.902 3.907 10.234 3.907 14.14.004l58.414-58.414c3.895-3.894 3.907-10.203.028-14.113l-58.41-58.91a10.002 10.002 0 1 0-14.203 14.082l41.515 41.867h-60.215a70.359 70.359 0 0 1-55.863-27.82l-51.918-68.77 51.918-68.766a70.36 70.36 0 0 1 55.867-27.82h60.207l-41.511 41.867c-3.891 3.922-3.864 10.254.058 14.141zm0 0" />
-                  </svg>
-                </div>
+                <Players />
+                <DiffPoints />
+                <PlayerTurnFab />
               </div>
               <div className="main-card">
                 <div className="content">
-                  <div className="scores">
-                    <div className="player-score-row">
-                      <div className="avatar-one" />
-                      <div className="player-name">
-                        Player <strong>A</strong>
-                      </div>
-                      <div className="player-score">
-                        <span>points</span> <span className="number">80</span>
-                      </div>
-                    </div>
-
-                    <div className="player-score-row active">
-                      <div className="avatar-two" />
-                      <div className="player-name">
-                        Player <strong>B</strong>
-                      </div>
-                      <div className="player-score">
-                        <span>points</span> <span className="number">80</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="ball-list">
-                    {this.state.balls.map(ball => (
-                      <Ball
-                        value={ball.value}
-                        color={ball.color}
-                        key={ball.id}
-                      />
-                    ))}
-                  </div>
+                  <Scores />
+                  <BallList balls={this.state.balls} />
                 </div>
               </div>
             </section>
