@@ -479,7 +479,15 @@
           const newState = this.state;
           const { players, turn } = newState;
           const currentPlayer = players.find(p => p.id === turn.id);
-          currentPlayer.balls.push(ball);
+          const otherPlayer = players.find(p => p.id !== turn.id);
+
+          if (ball.value >= 0) {
+            currentPlayer.balls.push(ball);
+          } else {
+            ball.value = Math.abs(ball.value);
+            otherPlayer.balls.push(ball);
+          }
+
           this.setState(newState);
         };
 
