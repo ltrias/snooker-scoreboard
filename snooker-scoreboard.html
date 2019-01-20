@@ -318,6 +318,18 @@
 
       class DiffPoints extends React.Component {
         render() {
+          const { players } = this.props;
+          const allPoints = [];
+          players.map(player => {
+            const { value: playerPoints } =
+              player.balls.length &&
+              player.balls.reduce((a, b) => ({
+                value: a.value + b.value
+              }));
+
+            allPoints.push(playerPoints ? playerPoints : 0);
+          });
+          const diff = Math.abs(allPoints[0] - allPoints[1]);
           return (
             <div className="diffPoints">
               <svg
@@ -328,7 +340,7 @@
               </svg>
 
               <div className="diff">
-                <strong>0</strong> <span>diff points</span>
+                <strong>{diff}</strong> <span>diff points</span>
               </div>
             </div>
           );
@@ -337,12 +349,13 @@
 
       class Ball extends React.Component {
         render() {
-          const { onClick, color, value } = this.props;
+          const { onClick, id, value, color } = this.props;
+
           return (
             <span
               className="ball"
               style={{ backgroundColor: color }}
-              onClick={e => onClick(value)}
+              onClick={e => onClick({ id, value, color })}
             />
           );
         }
@@ -370,12 +383,15 @@
       class ScoreList extends React.Component {
         render() {
           const { players, turn } = this.props;
+
           return (
             <div className="scores">
               {players.map(player => {
-                const { value: playerPoints } = player.balls.length && player.balls.reduce((a, b) => ({
-                  value: a.value + b.value
-                }));
+                const { value: playerPoints } =
+                  player.balls.length &&
+                  player.balls.reduce((a, b) => ({
+                    value: a.value + b.value
+                  }));
 
                 return (
                   <div
@@ -391,7 +407,9 @@
                     <div className="player-name">{player.name}</div>
                     <div className="player-score">
                       <span>points</span>{' '}
-                      <span className="number">{playerPoints ? playerPoints : 0}</span>
+                      <span className="number">
+                        {playerPoints ? playerPoints : 0}
+                      </span>
                     </div>
                   </div>
                 );
@@ -431,12 +449,7 @@
                 name: 'Player A',
                 avatar:
                   'https://www.nwemail.co.uk/resources/images/8963268.jpg?display=1&htype=0&type=responsive-gallery',
-                balls: [
-                  { id: 1, value: 1, color: '#f44336' },
-                  { id: 1, value: 1, color: '#f44336' },
-                  { id: 1, value: 1, color: '#f44336' },
-                  { id: 1, value: 1, color: '#f44336' }
-                ]
+                balls: []
               },
               {
                 id: 2,
@@ -462,14 +475,18 @@
           this.state.turn = this.state.players[0];
         }
 
-        addToPot = value => {
-          console.log(value);
+        addToPot = ball => {
+          const newState = this.state;
+          const { players, turn } = newState;
+          const currentPlayer = players.find(p => p.id === turn.id);
+          currentPlayer.balls.push(ball);
+          this.setState(newState);
         };
 
         handleTurn = () => {
           const newState = this.state;
           const { players, turn } = newState;
-          const otherPlayer = players.find(p => p.id != turn.id);
+          const otherPlayer = players.find(p => p.id !== turn.id);
           newState.turn = otherPlayer;
           this.setState(newState);
         };
