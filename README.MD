@@ -11,11 +11,11 @@ no commands in bash are NEEDED!!! 🍸
 ```
 
 ## 😎 Usage
-
 Double click on the file :O
 
 
-## 👷‍♂️ Contributing
+## 👷‍ Maintainers
+
 
 Pull requests are welcome. The challenge is maintain all code in one html. Additional files, will NOT be ACCEPTED!
 
