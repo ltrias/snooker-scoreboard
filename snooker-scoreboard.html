@@ -317,6 +317,23 @@
       class ScoreBoard extends React.Component {
         constructor(props) {
           super(props);
+
+          this.state = {
+            players: [
+              { id: 1, name: 'Player A', avatar: '', balls: []},
+              { id: 2, name: 'Player B', avatar: '', balls: []},
+            ],
+            balls: [
+              { id: 1, value: 2, color: '#fff176' },
+              { id: 2, value: 1, color: '#f44336' },
+              { id: 3, value: 3, color: '#7cb342' },
+              { id: 4, value: 4, color: '#795548' },
+              { id: 5, value: 5, color: '#0277bd' },
+              { id: 6, value: 6, color: '#f06292' },
+              { id: 7, value: 7, color: '#000000' },
+              { id: 8, value: -7, color: '#666666' }
+            ]
+          };
         }
 
         render() {
@@ -375,10 +392,13 @@
                     </div>
                   </div>
                   <div className="ball-list">
+                    {this.state.balls.map(ball => (
                       <Ball
-                        value="1"
-                        color="#000"
-                        key="1" />
+                        value={ball.value}
+                        color={ball.color}
+                        key={ball.id}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
