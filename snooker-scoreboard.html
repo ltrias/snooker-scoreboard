@@ -295,20 +295,20 @@
   </head>
   <body>
     <script type="text/babel">
-      class Players extends React.Component {
+      class PlayerList extends React.Component {
         render() {
           return (
             <div className="players">
               <div className="avatars">
-                {this.props.collection.map(player => (
+                {this.props.players.map(player => (
                   <div
-                    className="avatar"
+                    className={`avatar ${player.id === this.props.turn.id ? 'active' : ''}`}
                     key={player.id}
                     style={{ backgroundImage: `url(${player.avatar})` }}
                   />
                 ))}
               </div>
-              <div className="name">Player A</div>
+              <div className="name">{this.props.turn.name}</div>
             </div>
           );
         }
@@ -326,25 +326,8 @@
               </svg>
 
               <div className="diff">
-                <strong>80</strong> <span>diff points</span>
+                <strong>0</strong> <span>diff points</span>
               </div>
-            </div>
-          );
-        }
-      }
-
-      class PlayerTurnFab extends React.Component {
-        render() {
-          return (
-            <div className="fab">
-              <svg
-                height="403pt"
-                viewBox="0 -26 403.24 403"
-                width="403pt"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M327.785 134.543c3.922 3.89 10.254 3.863 14.145-.059l58.41-58.91c3.879-3.91 3.867-10.219-.028-14.11L341.898 3.052c-3.906-3.906-10.238-3.906-14.14 0-3.906 3.902-3.906 10.234 0 14.14l41.34 41.344H309.03a90.46 90.46 0 0 0-71.824 35.77l-48.488 64.222-48.489-64.222a90.467 90.467 0 0 0-71.824-35.77H10c-5.523 0-10 4.477-10 10 0 5.524 4.477 10 10 10h58.398a70.36 70.36 0 0 1 55.868 27.82l51.921 68.766-51.917 68.766a70.36 70.36 0 0 1-55.868 27.82H10c-5.523 0-10 4.477-10 10s4.477 10 10 10h58.398a90.474 90.474 0 0 0 71.829-35.77l48.492-64.218 48.488 64.222a90.463 90.463 0 0 0 71.828 35.77h60.067l-41.344 41.344c-3.906 3.906-3.906 10.238 0 14.14 3.902 3.907 10.234 3.907 14.14.004l58.414-58.414c3.895-3.894 3.907-10.203.028-14.113l-58.41-58.91a10.002 10.002 0 1 0-14.203 14.082l41.515 41.867h-60.215a70.359 70.359 0 0 1-55.863-27.82l-51.918-68.77 51.918-68.766a70.36 70.36 0 0 1 55.867-27.82h60.207l-41.511 41.867c-3.891 3.922-3.864 10.254.058 14.141zm0 0" />
-              </svg>
             </div>
           );
         }
@@ -361,11 +344,11 @@
         }
       }
 
-      class Balls extends React.Component {
+      class BallList extends React.Component {
         render() {
           return (
             <div className="ball-list">
-              {this.props.collection.map(ball => (
+              {this.props.balls.map(ball => (
                 <Ball value={ball.value} color={ball.color} key={ball.id} />
               ))}
             </div>
@@ -373,22 +356,41 @@
         }
       }
 
-      class Scores extends React.Component {
+      class ScoreList extends React.Component {
         render() {
           return (
             <div className="scores">
-              {this.props.collection.map(player => (
-                <div className="player-score-row" key={player.id}>
+              {this.props.players.map(player => (
+                <div className={`player-score-row ${player.id === this.props.turn.id ? 'active' : ''}`} key={player.id}>
                   <div
                     className="avatar"
                     style={{ backgroundImage: `url(${player.avatar})` }}
                   />
                   <div className="player-name">{player.name}</div>
                   <div className="player-score">
-                    <span>points</span> <span className="number">80</span>
+                    <span>points</span> <span className="number">0</span>
                   </div>
                 </div>
               ))}
+            </div>
+          );
+        }
+      }
+
+      class PlayerTurnFab extends React.Component {
+        render() {
+          const { onClick } = this.props;
+
+          return (
+            <div className="fab" onClick={onClick}>
+              <svg
+                height="403pt"
+                viewBox="0 -26 403.24 403"
+                width="403pt"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M327.785 134.543c3.922 3.89 10.254 3.863 14.145-.059l58.41-58.91c3.879-3.91 3.867-10.219-.028-14.11L341.898 3.052c-3.906-3.906-10.238-3.906-14.14 0-3.906 3.902-3.906 10.234 0 14.14l41.34 41.344H309.03a90.46 90.46 0 0 0-71.824 35.77l-48.488 64.222-48.489-64.222a90.467 90.467 0 0 0-71.824-35.77H10c-5.523 0-10 4.477-10 10 0 5.524 4.477 10 10 10h58.398a70.36 70.36 0 0 1 55.868 27.82l51.921 68.766-51.917 68.766a70.36 70.36 0 0 1-55.868 27.82H10c-5.523 0-10 4.477-10 10s4.477 10 10 10h58.398a90.474 90.474 0 0 0 71.829-35.77l48.492-64.218 48.488 64.222a90.463 90.463 0 0 0 71.828 35.77h60.067l-41.344 41.344c-3.906 3.906-3.906 10.238 0 14.14 3.902 3.907 10.234 3.907 14.14.004l58.414-58.414c3.895-3.894 3.907-10.203.028-14.113l-58.41-58.91a10.002 10.002 0 1 0-14.203 14.082l41.515 41.867h-60.215a70.359 70.359 0 0 1-55.863-27.82l-51.918-68.77 51.918-68.766a70.36 70.36 0 0 1 55.867-27.82h60.207l-41.511 41.867c-3.891 3.922-3.864 10.254.058 14.141zm0 0" />
+              </svg>
             </div>
           );
         }
@@ -416,16 +418,27 @@
               }
             ],
             balls: [
-              { id: 1, value: 2, color: '#fff176' },
-              { id: 2, value: 1, color: '#f44336' },
+              { id: 1, value: 1, color: '#f44336' },
+              { id: 2, value: 2, color: '#fff176' },
               { id: 3, value: 3, color: '#7cb342' },
               { id: 4, value: 4, color: '#795548' },
               { id: 5, value: 5, color: '#0277bd' },
               { id: 6, value: 6, color: '#f06292' },
               { id: 7, value: 7, color: '#000000' },
               { id: 8, value: -7, color: '#666666' }
-            ]
+            ],
+            turn: null
           };
+
+          this.state.turn = this.state.players[0];
+        }
+
+        handleTurn = () => {
+          const newState = this.state;
+          const { players, turn } = newState;
+          const otherPlayer = players.find(p => p.id != turn.id);
+          newState.turn = otherPlayer;
+          this.setState(newState);
         }
 
         render() {
@@ -435,14 +448,14 @@
                 <h1>
                   <strong>score</strong>board
                 </h1>
-                <Players collection={this.state.players} />
-                <DiffPoints />
-                <PlayerTurnFab />
+                <PlayerList players={this.state.players} turn={this.state.turn} />
+                <DiffPoints players={this.state.players} />
+                <PlayerTurnFab onClick={this.handleTurn} />
               </div>
               <div className="main-card">
                 <div className="content">
-                  <Scores collection={this.state.players} />
-                  <Balls collection={this.state.balls} />
+                  <ScoreList players={this.state.players} turn={this.state.turn} />
+                  <BallList balls={this.state.balls} />
                 </div>
               </div>
             </section>
