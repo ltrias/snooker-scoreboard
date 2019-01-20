@@ -302,7 +302,9 @@
               <div className="avatars">
                 {this.props.players.map(player => (
                   <div
-                    className={`avatar ${player.id === this.props.turn.id ? 'active' : ''}`}
+                    className={`avatar ${
+                      player.id === this.props.turn.id ? 'active' : ''
+                    }`}
                     key={player.id}
                     style={{ backgroundImage: `url(${player.avatar})` }}
                   />
@@ -335,10 +337,12 @@
 
       class Ball extends React.Component {
         render() {
+          const { onClick, color, value } = this.props;
           return (
             <span
               className="ball"
-              style={{ backgroundColor: this.props.color }}
+              style={{ backgroundColor: color }}
+              onClick={e => onClick(value)}
             />
           );
         }
@@ -346,10 +350,17 @@
 
       class BallList extends React.Component {
         render() {
+          const { potHandler: onClick, balls } = this.props;
+
           return (
             <div className="ball-list">
-              {this.props.balls.map(ball => (
-                <Ball value={ball.value} color={ball.color} key={ball.id} />
+              {balls.map(ball => (
+                <Ball
+                  value={ball.value}
+                  color={ball.color}
+                  key={ball.id}
+                  onClick={onClick}
+                />
               ))}
             </div>
           );
@@ -358,20 +369,33 @@
 
       class ScoreList extends React.Component {
         render() {
+          const { players, turn } = this.props;
           return (
             <div className="scores">
-              {this.props.players.map(player => (
-                <div className={`player-score-row ${player.id === this.props.turn.id ? 'active' : ''}`} key={player.id}>
+              {players.map(player => {
+                const { value: playerPoints } = player.balls.length && player.balls.reduce((a, b) => ({
+                  value: a.value + b.value
+                }));
+
+                return (
                   <div
-                    className="avatar"
-                    style={{ backgroundImage: `url(${player.avatar})` }}
-                  />
-                  <div className="player-name">{player.name}</div>
-                  <div className="player-score">
-                    <span>points</span> <span className="number">0</span>
+                    className={`player-score-row ${
+                      player.id === turn.id ? 'active' : ''
+                    }`}
+                    key={player.id}
+                  >
+                    <div
+                      className="avatar"
+                      style={{ backgroundImage: `url(${player.avatar})` }}
+                    />
+                    <div className="player-name">{player.name}</div>
+                    <div className="player-score">
+                      <span>points</span>{' '}
+                      <span className="number">{playerPoints ? playerPoints : 0}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           );
         }
@@ -407,7 +431,12 @@
                 name: 'Player A',
                 avatar:
                   'https://www.nwemail.co.uk/resources/images/8963268.jpg?display=1&htype=0&type=responsive-gallery',
-                balls: []
+                balls: [
+                  { id: 1, value: 1, color: '#f44336' },
+                  { id: 1, value: 1, color: '#f44336' },
+                  { id: 1, value: 1, color: '#f44336' },
+                  { id: 1, value: 1, color: '#f44336' }
+                ]
               },
               {
                 id: 2,
@@ -433,13 +462,17 @@
           this.state.turn = this.state.players[0];
         }
 
+        addToPot = value => {
+          console.log(value);
+        };
+
         handleTurn = () => {
           const newState = this.state;
           const { players, turn } = newState;
           const otherPlayer = players.find(p => p.id != turn.id);
           newState.turn = otherPlayer;
           this.setState(newState);
-        }
+        };
 
         render() {
           return (
@@ -448,14 +481,23 @@
                 <h1>
                   <strong>score</strong>board
                 </h1>
-                <PlayerList players={this.state.players} turn={this.state.turn} />
+                <PlayerList
+                  players={this.state.players}
+                  turn={this.state.turn}
+                />
                 <DiffPoints players={this.state.players} />
                 <PlayerTurnFab onClick={this.handleTurn} />
               </div>
               <div className="main-card">
                 <div className="content">
-                  <ScoreList players={this.state.players} turn={this.state.turn} />
-                  <BallList balls={this.state.balls} />
+                  <ScoreList
+                    players={this.state.players}
+                    turn={this.state.turn}
+                  />
+                  <BallList
+                    balls={this.state.balls}
+                    potHandler={this.addToPot}
+                  />
                 </div>
               </div>
             </section>
