@@ -1,178 +1,29 @@
-<html>
-    <head>
-        <style type="text/css">
-            .scoreBoard {
-                background-color: lightgrey;
-                border-radius: 15px;
-                float: left;
-            }
-            
-            .ball {
-                height: 75px;
-                width: 75px;
-                margin: 15px;
-                border-radius: 50%;
-                display: inline-block;
-            }
-
-            .b1 {background-color: red;}
-            .b2 {background-color: yellow;}
-            .b3 {background-color: green;}
-            .b4 {background-color: brown;}
-            .b5 {background-color: blue;}
-            .b6 {background-color: hotpink;}
-            .b7 {background-color: black;}
-            .b-7 {background-color: grey;}
-            
-            .name {
-                font-size: large;
-                display: inline-block;
-            }
-
-            .score {
-                margin: 15px;
-                font-size: xx-large;
-                display: inline-block;
-            }
-
-            ul, ol{
-                list-style: none;
-            }
-
-            li {
-                border: 1px;
-                border-style: solid;
-                width: 20px;
-                height: 20px;
-                display: inline-block;
-            }
-            
-        </style>
-    </head>
-    <body>
-        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
-    
-        <script type="text/babel">
-            const sum = (a, b) => parseInt(a) + parseInt(b);
-
-            class Ball extends React.Component{
-                constructor(props) {
-                    super(props);
-                }
-
-                render(){
-                    return <span className={`ball b${this.props.number}`} onClick={ (e) => this.props.handler(this.props.number)}></span>
-                }
-            }
-
-            class PotHistory extends React.Component{
-                constructor(props){
-                    super(props)
-                }
-
-                render(){
-                    return (
-                        <ul>
-
-                        {
-                            this.props.h.map((e, i) => {
-                                return <li className={`b${e}`}></li>
-                            })
-                        }
-
-                        </ul>
-                    )
-                }
-            }
-
-            class ScoreBoard extends React.Component{
-                constructor(props) {
-                    super(props);
-
-                    this.state = { 
-                                    p1: "Jogador A",
-                                    p2: "Jogador B",
-                                    s1: [],
-                                    s2: [],
-                                    p1Score: 0,
-                                    p2Score: 0,
-                                    p1Playing: true
-                                 };
-
-                    this.addPot = this.addPot.bind(this)
-                    this.switchPlayer = this.switchPlayer.bind(this)
-                }
-
-                addPot(n){
-                    let newState = {}
-
-                    if(n === "-7"){
-                        if(this.state.p1Playing){
-                            newState.s2 = this.state.s2.concat(n * -1)
-                            newState.s1 = this.state.s1 
-                        } else{
-                            newState.s1 = this.state.s1.concat(n * -1) 
-                            newState.s2 = this.state.s2
-                        }
-                    } else {
-                        if(this.state.p1Playing){
-                            newState.s1 = this.state.s1.concat(n)
-                            newState.s2 = this.state.s2
-                        }else{
-                            newState.s2 = this.state.s2.concat(n)
-                            newState.s1 = this.state.s1
-                        }
-                    }
-
-                    newState.p1Score = newState.s1.reduce(sum, 0)
-                    newState.p2Score = newState.s2.reduce(sum, 0)
-
-                    this.setState(newState)
-                }
-
-                switchPlayer(){
-                    let currentlyPlaying = this.state.p1Playing;
-                    currentlyPlaying = !currentlyPlaying
-
-                    this.setState({p1Playing: currentlyPlaying})
-                }
-
-                render(){
-                    return <div className='scoreBoard'>
-                            {this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
-                            <div className={'name'}> {this.state.p1}: </div>
-                            <div className={'score'}> {this.state.p1Score} </div>
-                            <PotHistory h={this.state.s1} />
-                            {!this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
-                            <div className={'name'}> {this.state.p2}: </div>
-                            <div className={'score'}> {this.state.p2Score} </div>
-                            <PotHistory h={this.state.s2} />
-                            <div className={'name'}> Diferença: </div>
-                            <div className={'score'}> {Math.abs(this.state.p1Score - this.state.p2Score)} </div>
-
-                            <button type="button" onClick={this.switchPlayer}>Passar a vez</button>
-
-                            <p>
-                            <Ball number="1" handler={this.addPot}/>
-                            <Ball number="2" handler={this.addPot}/>
-                            <Ball number="3" handler={this.addPot}/>
-                            <Ball number="4" handler={this.addPot}/>
-                            <Ball number="5" handler={this.addPot}/>
-                            <Ball number="6" handler={this.addPot}/>
-                            <Ball number="7" handler={this.addPot}/>
-                            <Ball number="-7" handler={this.addPot}/>
-                            </p>
-                           </div>
-                }
-            }
-
-            ReactDOM.render(
-                <ScoreBoard/>,
-                document.getElementById('scoreboard')
-            );
-        </script>
-        <div id="scoreboard"></div>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Snooker scoreboard</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Comfortaa"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Varela+Round"
+      rel="stylesheet"
+    />
+    <script
+      src="https://unpkg.com/react@16/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+    </style>
+  </head>
+  <body>
+  </body>
 </html>
