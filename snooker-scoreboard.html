@@ -22,11 +22,173 @@
       crossorigin
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+    <style>
+      body,
+      html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        background-color: #eceff4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Varela Round';
+      }
+
+      #scoreboard {
+        position: relative;
+        width: 900px;
+        height: 500px;
+      }
+
+      .wrapper {
+        width: 100%;
+        height: 100%;
+      }
+
+      .players {
+        position: absolute;
+        top: 0;
+        width: 300px;
+        height: 100%;
+        background-color: #78909c;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-items: center;
+        color: #eceff4;
+
+        -webkit-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+      }
+
+      .players h1 {
+        font-weight: 300;
+        font-size: 28px;
+        text-transform: uppercase;
+        letter-spacing: -2px;
+        margin: 60px 0 60px;
+        color: rgba(236, 239, 244, 0.3);
+      }
+
+      .players h1 strong {
+        font-weight: 300;
+        color: rgba(236, 239, 244, 1);
+      }
+
+      .players .avatars {
+        display: flex;
+        flex-direction: row;
+        height: 80px;
+        align-items: center;
+      }
+
+      .players .avatars .avatar-one,
+      .players .avatars .avatar-two {
+        background-color: black;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin: 0 15px 0 0;
+        opacity: 0.4;
+
+        -webkit-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+
+        background-size: 200%;
+        background-position: center center;
+      }
+
+      .players .avatars .avatar-one {
+        background-image: url('https://www.nwemail.co.uk/resources/images/8963268.jpg?display=1&htype=0&type=responsive-gallery');
+      }
+
+      .players .avatars .avatar-two {
+        background-image: url('https://cdn.images.express.co.uk/img/dynamic/4/590x/secondary/UK-Championship-snooker-TV-schedule-1617038.jpg?r=1544057723904');
+      }
+
+      .players .avatars .avatar-one.active,
+      .players .avatars .avatar-two.active {
+        width: 80px;
+        height: 80px;
+        opacity: 1;
+      }
+
+      .players .name {
+        margin-top: 30px;
+        text-transform: uppercase;
+      }
+
+      .players svg {
+        margin: 25px 0px 25px 0px;
+        width: 30px;
+        height: 30px;
+        transform: rotate(180deg);
+        opacity: 0.3;
+      }
+
+      .players .diff {
+        text-align: center;
+        font-size: 28px;
+      }
+
+      .players .diff span {
+        margin-top: 5px;
+        display: block;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      .players .fab {
+        position: absolute;
+        bottom: -25px;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        -webkit-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+
+        background-color: #f44336;
+      }
+
+      .main-card {
+        width: calc(100% - 40px);
+        height: calc(100% - 40px);
+        margin: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        display: flex;
+        justify-content: flex-end;
+
+        -webkit-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.09);
+        -moz-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.09);
+        box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.09);
+      }
+
+      .main-card .content {
+        display: flex;
+        flex-flow: row wrap;
+        width: 62.5%;
+        padding: 20px;
+      }
+    </style>
   </head>
   <body>
     <section className="wrapper">
       <div className="players"></div>
-      <div className="main-card"></div>
+      <div className="main-card"><div className="content"></div></div>
     </section>
   </body>
 </html>
