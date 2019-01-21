@@ -259,6 +259,25 @@
         font-size: 14px;
       }
 
+      .scores .player-score-row .pot-history {
+        display: flex;
+        flex-direction: row;
+        margin-left: 20px;
+      }
+
+      .scores .player-score-row .pot-history .ball-pot {
+        margin: 0 4px;
+        text-align: center;
+        font-size: 12px;
+        color: #737373;
+      }
+
+      .scores .player-score-row .pot-history .ball {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
       .scores .player-score-row .player-score {
         display: flex;
         flex-direction: row;
@@ -380,9 +399,36 @@
         }
       }
 
+      class PotHistory extends React.Component {
+        render() {
+          const { balls, player } = this.props;
+          const filtered = balls.filter(ball => ball.value > 0);
+
+          return (
+            <div className="pot-history">
+              {filtered.map(ball => {
+                const totalBalls = player.balls.filter(
+                  playerBall => playerBall.color === ball.color
+                );
+
+                return (
+                  <div className="ball-pot" key={ball.id}>
+                    <div
+                      className="ball"
+                      style={{ backgroundColor: ball.color }}
+                    />
+                    <div className="pot">{totalBalls.length}</div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        }
+      }
+
       class ScoreList extends React.Component {
         render() {
-          const { players, turn } = this.props;
+          const { players, turn, balls } = this.props;
 
           return (
             <div className="scores">
@@ -405,6 +451,7 @@
                       style={{ backgroundImage: `url(${player.avatar})` }}
                     />
                     <div className="player-name">{player.name}</div>
+                    <PotHistory balls={balls} player={player} />
                     <div className="player-score">
                       <span>points</span>{' '}
                       <span className="number">
@@ -484,6 +531,7 @@
           if (ball.value >= 0) {
             currentPlayer.balls.push(ball);
           } else {
+            ball.color = '#000000';
             ball.value = Math.abs(ball.value);
             otherPlayer.balls.push(ball);
           }
@@ -518,6 +566,7 @@
                   <ScoreList
                     players={this.state.players}
                     turn={this.state.turn}
+                    balls={this.state.balls}
                   />
                   <BallList
                     balls={this.state.balls}
