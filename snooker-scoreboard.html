@@ -38,6 +38,11 @@
                 flex: initial;
             }
 
+            .currentPlayer h1, h2{
+                display: flex;
+                margin-bottom: auto;
+            }
+
             .scores{
                 width: calc(100% - 40px);
                 height: calc(100% - 40px);
@@ -66,6 +71,10 @@
                 align-items: center;
                 margin: 5px;
                 border-bottom: 1px solid #e6e6e6;
+            }
+
+            .scores .playerScore.active{
+                background-color: #f4f4f4;
             }
             
             .scores .content .playerScore .text {
@@ -215,25 +224,23 @@
                     return <div className={'scoreBoard'}>
                             <div className={'currentPlayer'}>
                                 <h1>Placar Sinuca</h1>
-                                <h2>Jogador A</h2>
+                                <h2>Jogador {this.state.p1Playing ? 'A': 'B'}</h2>
                                 <p>25 pontos</p>
                                 
-                                <div className={'name'}> Diferença: </div>
-                                <div className={'score'}> {Math.abs(this.state.p1Score - this.state.p2Score)} </div>
+                                <div> Diferença: </div>
+                                <div> {Math.abs(this.state.p1Score - this.state.p2Score)} </div>
                                 <button type="button" onClick={this.switchPlayer}>Passar a vez</button>
                             </div>
                             <div className={'scores'}>
                                 <div className={'content'}>
-                                    <div className={'playerScore'}>
+                                    <div className={`playerScore ${this.state.p1Playing ? 'active': ''}`}>
                                         <div className={'text'}>
-                                                {this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
                                                 {this.state.p1} {this.state.p1Score}
                                         </div>
                                         <PotHistory h={this.state.s1} />
                                     </div>
-                                    <div className={'playerScore'}>
+                                    <div className={`playerScore ${this.state.p1Playing ? '': 'active'}`}>
                                         <div className={'text'}>
-                                            {!this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
                                             {this.state.p2} {this.state.p2Score}
                                         </div>
                                         <PotHistory h={this.state.s2} />
