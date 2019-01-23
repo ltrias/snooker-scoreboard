@@ -225,7 +225,7 @@
                             <div className={'currentPlayer'}>
                                 <h1>Placar Sinuca</h1>
                                 <h2>Jogador {this.state.p1Playing ? 'A': 'B'}</h2>
-                                <p>25 pontos</p>
+                                <h2>{this.state.p1Playing ? this.state.p1Score: this.state.p2Score} pontos</h2>
                                 
                                 <div> Diferença: </div>
                                 <div> {Math.abs(this.state.p1Score - this.state.p2Score)} </div>
