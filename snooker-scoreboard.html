@@ -43,6 +43,18 @@
                 margin-bottom: auto;
             }
 
+            .currentPlayer .diff {
+                font-size: 28px;
+            }
+
+            .currentPlayer .winning {
+                color: darkgreen
+            }
+            
+            .currentPlayer .loosing {
+                color: darkred
+            }
+
             .scores{
                 width: calc(100% - 40px);
                 height: calc(100% - 40px);
@@ -220,14 +232,32 @@
                 }
 
                 render(){
+                    let scoreDiff = this.state.p1Score - this.state.p2Score
+                    let diffClassName = ''
+                    if(scoreDiff > 0 ){
+                        if(this.state.p1Playing){
+                            diffClassName = 'winning'
+                        }else{
+                            diffClassName = 'loosing'
+                        }
+                    }else if(scoreDiff < 0){
+                        if(this.state.p1Playing){
+                            diffClassName = 'loosing'
+                        }else{
+                            diffClassName = 'winning'
+                        }
+                    }
+
                     return <div className={'scoreBoard'}>
                             <div className={'currentPlayer'}>
                                 <h1>Placar Sinuca</h1>
                                 <h2>Jogador {this.state.p1Playing ? 'A': 'B'}</h2>
                                 <h2>{this.state.p1Playing ? this.state.p1Score: this.state.p2Score} pontos</h2>
                                 
-                                <div> Diferença: </div>
-                                <div> {Math.abs(this.state.p1Score - this.state.p2Score)} </div>
+                                <div className={`diff ${diffClassName}`}>
+                                    Diferença: {Math.abs(scoreDiff)}
+                                </div>
+                                
                                 <button type="button" onClick={this.switchPlayer}>Passar a vez</button>
                             </div>
                             <div className={'scores'}>
