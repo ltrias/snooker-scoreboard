@@ -2,19 +2,93 @@
     <head>
         <title>Placar Sinuca</title>
         <meta charset="UTF-8"/>
-        <style type="text/css">
+        <style>
+            html, body {
+                margin: 0;
+                max-width: 100%;
+                max-height: 100%;
+            }
+
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #eceff4
+            }
+
             .scoreBoard {
-                background-color: lightgrey;
-                border-radius: 15px;
-                float: left;
+                position: relative;
+                display: flex;
+                width: 900px;
+                min-width: 750px;
+                height: 500px;
+            }
+
+            .currentPlayer {
+                top: 0;
+                width: 450px;
+                min-width: 150px;
+                height: 100%;
+                background-color: #78909c;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                flex: initial;
+            }
+
+            .scores{
+                width: calc(100% - 40px);
+                height: calc(100% - 40px);
+                margin: 20px;
+                margin-left: 0;
+                border-radius: 8px;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                display: flex;
+                justify-content: flex-end;
+                flex-flow: wrap;
+                flex: auto;
+                background-color: white;
+            }
+
+            .scores .content{
+                display: flex;
+                flex-flow: column;
+                width: calc(100% - 10px)
+            }
+
+            .scores .playerScore {
+                position: relative;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin: 5px;
+                border-bottom: 1px solid #e6e6e6;
             }
             
-            .ball {
-                height: 75px;
-                width: 75px;
-                margin: 15px;
+            .scores .content .playerScore .text {
+                display: flex;
+                position: absolute;
+                top: 5px;
+            }
+
+            .ballList {
+                display: flex;
+                flex-flow: wrap;
+                justify-content: space-evenly; 
+                margin-top: auto;
+                margin-bottom: 15px
+            }
+
+            .ballList .ball {
+                height: 60px;
+                width: 60px;
                 border-radius: 50%;
-                display: inline-block;
+                margin-right: 10px;
+                margin-top: 10px;
+                position: relative;
             }
 
             .b1 {background-color: red;}
@@ -25,31 +99,26 @@
             .b6 {background-color: hotpink;}
             .b7 {background-color: black;}
             .b-7 {background-color: grey;}
-            
-            .name {
-                font-size: large;
-                display: inline-block;
+
+            .potHistory {
+                display: flex;
+                padding: 25px;
+                height: 75px;                
+                flex-direction: row;
+                flex-flow: wrap;
             }
 
-            .score {
-                margin: 15px;
-                font-size: xx-large;
-                display: inline-block;
-            }
-
-            ul, ol{
+            .potHistory ul, ol{
                 list-style: none;
             }
 
-            li {
+            .potHistory li {
                 border: 1px;
                 border-style: solid;
-                border-color: beige;
                 width: 20px;
                 height: 20px;
                 display: inline-block;
             }
-            
         </style>
     </head>
     <body>
@@ -77,15 +146,15 @@
 
                 render(){
                     return (
-                        <ul>
-
-                        {
-                            this.props.h.map((e, i) => {
-                                return <li className={`b${e}`}></li>
-                            })
-                        }
-
-                        </ul>
+                        <div className={'potHistory'}>
+                            <ul>
+                            {
+                                this.props.h.map((e, i) => {
+                                    return <li className={`b${e}`}></li>
+                                })
+                            }
+                            </ul>
+                        </div>
                     )
                 }
             }
@@ -143,30 +212,44 @@
                 }
 
                 render(){
-                    return <div className='scoreBoard'>
-                            {this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
-                            <div className={'name'}> {this.state.p1}: </div>
-                            <div className={'score'}> {this.state.p1Score} </div>
-                            <PotHistory h={this.state.s1} />
-                            {!this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
-                            <div className={'name'}> {this.state.p2}: </div>
-                            <div className={'score'}> {this.state.p2Score} </div>
-                            <PotHistory h={this.state.s2} />
-                            <div className={'name'}> Diferença: </div>
-                            <div className={'score'}> {Math.abs(this.state.p1Score - this.state.p2Score)} </div>
-
-                            <button type="button" onClick={this.switchPlayer}>Passar a vez</button>
-
-                            <p>
-                            <Ball number="1" handler={this.addPot}/>
-                            <Ball number="2" handler={this.addPot}/>
-                            <Ball number="3" handler={this.addPot}/>
-                            <Ball number="4" handler={this.addPot}/>
-                            <Ball number="5" handler={this.addPot}/>
-                            <Ball number="6" handler={this.addPot}/>
-                            <Ball number="7" handler={this.addPot}/>
-                            <Ball number="-7" handler={this.addPot}/>
-                            </p>
+                    return <div className={'scoreBoard'}>
+                            <div className={'currentPlayer'}>
+                                <h1>Placar Sinuca</h1>
+                                <h2>Jogador A</h2>
+                                <p>25 pontos</p>
+                                
+                                <div className={'name'}> Diferença: </div>
+                                <div className={'score'}> {Math.abs(this.state.p1Score - this.state.p2Score)} </div>
+                                <button type="button" onClick={this.switchPlayer}>Passar a vez</button>
+                            </div>
+                            <div className={'scores'}>
+                                <div className={'content'}>
+                                    <div className={'playerScore'}>
+                                        <div className={'text'}>
+                                                {this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
+                                                {this.state.p1} {this.state.p1Score}
+                                        </div>
+                                        <PotHistory h={this.state.s1} />
+                                    </div>
+                                    <div className={'playerScore'}>
+                                        <div className={'text'}>
+                                            {!this.state.p1Playing ? <div className={'name'}> {'\u25b6\u2003'} </div> : ''}
+                                            {this.state.p2} {this.state.p2Score}
+                                        </div>
+                                        <PotHistory h={this.state.s2} />
+                                    </div>
+                                    <div className={'ballList'}>
+                                        <Ball number="1" handler={this.addPot}/>
+                                        <Ball number="2" handler={this.addPot}/>
+                                        <Ball number="3" handler={this.addPot}/>
+                                        <Ball number="4" handler={this.addPot}/>
+                                        <Ball number="5" handler={this.addPot}/>
+                                        <Ball number="6" handler={this.addPot}/>
+                                        <Ball number="7" handler={this.addPot}/>
+                                        <Ball number="-7" handler={this.addPot}/>
+                                    </div>
+                                </div>
+                            </div>
                            </div>
                 }
             }
