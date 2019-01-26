@@ -210,7 +210,7 @@
                             <ul>
                             {
                                 this.props.h.map((e, i) => {
-                                    return <li className={`b${e}`}></li>
+                                    return <li key={i} className={`b${e}`} onClick={ (e) =>  this.props.deletePot(i)}></li>
                                 })
                             }
                             </ul>
@@ -237,7 +237,8 @@
                     this.addPot = this.addPot.bind(this)
                     this.switchPlayer = this.switchPlayer.bind(this)
                     this.toggleCorrecting = this.toggleCorrecting.bind(this)
-                    
+                    this.deletePot = this.deletePot.bind(this)
+                    this.updateScores = this.updateScores.bind(this)
                 }
 
                 addPot(n){
@@ -260,11 +261,32 @@
                             newState.s1 = this.state.s1
                         }
                     }
-
-                    newState.p1Score = newState.s1.reduce(sum, 0)
-                    newState.p2Score = newState.s2.reduce(sum, 0)
+                    
+                    newState = Object.assign(this.updateScores(newState), newState)
 
                     this.setState(newState)
+                }
+
+                updateScores(state){
+                    let result = {}
+
+                    if(state.s1) result.p1Score = state.s1.reduce(sum, 0)
+                    if(state.s2) result.p2Score = state.s2.reduce(sum, 0)
+
+                    return result
+                }
+
+                deletePot(i){
+                    if( this.state.correcting ){
+                        let potHistory = this.state.p1Playing ? this.state.s1 : this.state.s2
+                        
+                        potHistory.splice(i, 1)
+                        
+                        this.toggleCorrecting()
+                        let state = {[this.state.p1Playing ? 's1' : 's2']: potHistory}
+                        state = Object.assign(this.updateScores(state), state)
+                        this.setState(state)
+                    }
                 }
 
                 switchPlayer(){
@@ -323,13 +345,13 @@
                                         <div className={'text'}>
                                                 {this.state.p1} {this.state.p1Score}
                                         </div>
-                                        <PotHistory h={this.state.s1} />
+                                        <PotHistory h={this.state.s1} deletePot={this.deletePot}/>
                                     </div>
                                     <div className={`playerScore ${this.state.p1Playing ? '': 'active'}`}>
                                         <div className={'text'}>
                                             {this.state.p2} {this.state.p2Score}
                                         </div>
-                                        <PotHistory h={this.state.s2} />
+                                        <PotHistory h={this.state.s2} deletePot={this.deletePot}/>
                                     </div>
                                     <div className={'ballList'}>
                                         <Ball number="1" handler={this.addPot}/>
