@@ -29,7 +29,7 @@
                 width: 450px;
                 min-width: 150px;
                 height: 100%;
-                background-color: #78909c;
+                background-color: rgb(120, 144, 156);
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -41,6 +41,18 @@
             .currentPlayer *{
                 display: flex;
                 margin-bottom: auto;
+            }
+
+            .currentPlayer .playerName {
+                border-radius: 5px;
+                border-width:1px;
+                border-style: solid;
+                border-color: rgba(100, 124, 136);
+                background-color: rgba(120, 144, 156)
+            }
+
+            .currentPlayer .playerName:focus{
+                background-color: rgba(140, 164, 176)
             }
 
             .currentPlayer .diff {
@@ -224,8 +236,8 @@
                     super(props);
 
                     this.state = { 
-                                    p1: "Jogador A",
-                                    p2: "Jogador B",
+                                    p1Name: "Jogador A",
+                                    p2Name: "Jogador B",
                                     s1: [],
                                     s2: [],
                                     p1Score: 0,
@@ -239,6 +251,7 @@
                     this.toggleCorrecting = this.toggleCorrecting.bind(this)
                     this.deletePot = this.deletePot.bind(this)
                     this.updateScores = this.updateScores.bind(this)
+                    this.updatePlayerName = this.updatePlayerName.bind(this)
                 }
 
                 addPot(n){
@@ -300,6 +313,11 @@
                     this.setState({correcting: !this.state.correcting})
                 }
 
+                updatePlayerName(e){
+                    let name = e.target.value;
+                    this.setState({[this.state.p1Playing ? 'p1Name' : 'p2Name']: name })
+                }
+
                 render(){
                     let scoreDiff = this.state.p1Score - this.state.p2Score
                     let diffClassName = ''
@@ -320,7 +338,7 @@
                     return <div className={'scoreBoard'}>
                             <div className={'currentPlayer'}>
                                 <h1>Placar Sinuca</h1>
-                                <h2>Jogador {this.state.p1Playing ? 'A': 'B'}</h2>
+                                <input type="text" className={'playerName'} value={`${this.state.p1Playing ? this.state.p1Name: this.state.p2Name}`} onChange={this.updatePlayerName}/>
                                 <h2>{this.state.p1Playing ? this.state.p1Score: this.state.p2Score} pontos</h2>
                                 
                                 <div className={`diff ${diffClassName}`}>
@@ -343,13 +361,13 @@
                                 <div className={'content'}>
                                     <div className={`playerScore ${this.state.p1Playing ? 'active': ''}`}>
                                         <div className={'text'}>
-                                                {this.state.p1} {this.state.p1Score}
+                                                {this.state.p1Name}: {this.state.p1Score}
                                         </div>
                                         <PotHistory h={this.state.s1} deletePot={this.deletePot}/>
                                     </div>
                                     <div className={`playerScore ${this.state.p1Playing ? '': 'active'}`}>
                                         <div className={'text'}>
-                                            {this.state.p2} {this.state.p2Score}
+                                            {this.state.p2Name}: {this.state.p2Score}
                                         </div>
                                         <PotHistory h={this.state.s2} deletePot={this.deletePot}/>
                                     </div>
