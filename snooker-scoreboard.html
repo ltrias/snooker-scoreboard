@@ -236,19 +236,13 @@
             }
 
             class ScoreBoard extends React.Component{
+                 
+
                 constructor(props) {
                     super(props);
 
-                    this.state = { 
-                                    p1Name: "Jogador A",
-                                    p2Name: "Jogador B",
-                                    s1: [],
-                                    s2: [],
-                                    p1Score: 0,
-                                    p2Score: 0,
-                                    p1Playing: true,
-                                    correcting: false
-                                 };
+                    this.state = Object.assign({p1Name: "Jogador A", p2Name: "Jogador B"}, this.initialScoreState())
+                                 
 
                     this.addPot = this.addPot.bind(this)
                     this.switchPlayer = this.switchPlayer.bind(this)
@@ -259,17 +253,20 @@
                     this.resetScores = this.resetScores.bind(this)
                 }
 
+                initialScoreState(){
+                    return {
+                        s1: [],
+                        s2: [],
+                        p1Score: 0,
+                        p2Score: 0,
+                        p1Playing: true,
+                        correcting: false
+                    }
+                }
+
                 resetScores(){
                     if( confirm("Quer resetar as pontuações?") ){
-                        let state = {
-                            s1: [],
-                            s2: [],
-                            p1Playing: true
-                        }
-
-                        state = Object.assign(this.updateScores(state), state)
-
-                        this.setState(state)
+                        this.setState(this.initialScoreState())
                     }
                 }
 
