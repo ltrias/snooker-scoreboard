@@ -191,6 +191,10 @@
                 background-color: greenyellow;
             }
 
+            .reset {
+                background-color: brown;
+            }
+
         </style>
     </head>
     <body>
@@ -252,6 +256,19 @@
                     this.deletePot = this.deletePot.bind(this)
                     this.updateScores = this.updateScores.bind(this)
                     this.updatePlayerName = this.updatePlayerName.bind(this)
+                    this.resetScores = this.resetScores.bind(this)
+                }
+
+                resetScores(){
+                    let state = {
+                        s1: [],
+                        s2: [],
+                        p1Playing: false
+                    }
+
+                    state = Object.assign(this.updateScores(state), state)
+
+                    this.setState(state)
                 }
 
                 addPot(n){
@@ -355,6 +372,7 @@
                                             </svg>
                                     </div>
                                     <div className={`playerSwitcher ${this.state.correcting ? 'correcting' : 'correction'}`} onClick={this.toggleCorrecting} >↺</div>
+                                    <div className={`playerSwitcher reset`} onClick={this.resetScores} >Reset</div>
                                 </div>
                             </div>
                             <div className={'scores'}>
