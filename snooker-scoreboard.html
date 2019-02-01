@@ -260,15 +260,17 @@
                 }
 
                 resetScores(){
-                    let state = {
-                        s1: [],
-                        s2: [],
-                        p1Playing: false
+                    if( confirm("Quer resetar as pontuações?") ){
+                        let state = {
+                            s1: [],
+                            s2: [],
+                            p1Playing: true
+                        }
+
+                        state = Object.assign(this.updateScores(state), state)
+
+                        this.setState(state)
                     }
-
-                    state = Object.assign(this.updateScores(state), state)
-
-                    this.setState(state)
                 }
 
                 addPot(n){
