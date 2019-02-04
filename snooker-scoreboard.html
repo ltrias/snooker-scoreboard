@@ -198,8 +198,8 @@
         </style>
     </head>
     <body>
-        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react@16/umd/react.development.js" ></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
     
         <script type="text/babel">
@@ -236,13 +236,13 @@
             }
 
             class ScoreBoard extends React.Component{
-                 
-
                 constructor(props) {
                     super(props);
 
-                    this.state = Object.assign({p1Name: "Jogador A", p2Name: "Jogador B"}, this.initialScoreState())
-                                 
+                    let lastState = this.restoreState()
+                    let initialState = this.initialScoreState()
+
+                    this.state = Object.assign(initialState, {p1Name: "Jogador A", p2Name: "Jogador B"}, lastState)
 
                     this.addPot = this.addPot.bind(this)
                     this.switchPlayer = this.switchPlayer.bind(this)
@@ -251,6 +251,21 @@
                     this.updateScores = this.updateScores.bind(this)
                     this.updatePlayerName = this.updatePlayerName.bind(this)
                     this.resetScores = this.resetScores.bind(this)
+                }
+
+                restoreState(){
+                    let cookie = document.cookie.replace(/.*scoreboard_state=({.*?}).*/, "$1")
+
+                    return cookie ? JSON.parse(cookie) : cookie
+                }
+
+                setState(s){
+                    let newState = {}
+                    newState = Object.assign(newState, this.state, s)
+
+                    super.setState(s)
+                    
+                    document.cookie = "scoreboard_state=" + JSON.stringify(newState)
                 }
 
                 initialScoreState(){
