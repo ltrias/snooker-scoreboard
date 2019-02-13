@@ -73,7 +73,9 @@
 
             .toolbar{
                 display: flex;
-                flex: 0.5;
+                align-items: center;
+                justify-content: space-between;
+                flex: .75;
                 background-color: mediumvioletred;
             }
 
@@ -101,6 +103,48 @@
             
             .loosing {
                 color: darkred
+            }
+
+            .toolbar .buttons{
+                display: flex;
+                flex-flow: row;
+                justify-content: space-evenly;
+                width: 100%;
+            }
+
+            .playerSwitcher {
+                width: 70px;
+                height: 70px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-items: center;
+                justify-content: center;
+                cursor: pointer;
+                -webkit-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+                -moz-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+                box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+                background-color: #192e8f;
+                fill: aliceblue
+            }
+
+            .playerSwitcher svg {
+                margin: 25px 0px 25px 0px;
+                width: 30px;
+                height: 30px;
+                opacity: 0.3;
+            }
+
+            .correction {
+                background-color: rosybrown;
+            }
+
+            .correcting {
+                background-color: greenyellow;
+            }
+
+            .reset {
+                background-color: brown;
             }
 
         </style>
@@ -134,6 +178,9 @@
 
                     this.addPot = this.addPot.bind(this)
                     this.updatePlayerName = this.updatePlayerName.bind(this)
+                    this.toggleCorrecting = this.toggleCorrecting.bind(this)
+                    this.resetScores = this.resetScores.bind(this)
+                    this.switchPlayer = this.switchPlayer.bind(this)
                 }
 
                 setState(s){
@@ -151,6 +198,13 @@
                     return cookie ? JSON.parse(cookie) : cookie
                 }
 
+                switchPlayer(){
+                    let currentlyPlaying = this.state.p1Playing;
+                    currentlyPlaying = !currentlyPlaying
+
+                    this.setState({p1Playing: currentlyPlaying})
+                }
+
                 initialScoreState(){
                     return {
                         s1: [],
@@ -159,6 +213,12 @@
                         p2Score: 0,
                         p1Playing: true,
                         correcting: false
+                    }
+                }
+
+                resetScores(){
+                    if( confirm("Quer resetar as pontuações?") ){
+                        this.setState(this.initialScoreState())
                     }
                 }
 
@@ -202,6 +262,10 @@
                     this.setState({[this.state.p1Playing ? 'p1Name' : 'p2Name']: name })
                 }
 
+                toggleCorrecting(){
+                    this.setState({correcting: !this.state.correcting})
+                }
+
                 render(){
                     let scoreDiff = this.state.p1Score - this.state.p2Score
                     let diffClassName = ''
@@ -226,7 +290,7 @@
                                 <div>Jogador atual: <input type="text" className={'playerName'} value={`${this.state.p1Playing ? this.state.p1Name: this.state.p2Name}`} onChange={this.updatePlayerName}/></div><br/>
                                 <div>Pontuação: {this.state.p1Playing ? this.state.p1Score: this.state.p2Score} pontos</div>
                             </div>
-                            <div className={'score-diff'}>{Math.abs(scoreDiff)}</div>
+                            <div className={`score-diff ${diffClassName}`}>{Math.abs(scoreDiff)}</div>
                         </div>
                         <div className={'potList'}></div>
                         <div className={'potList'}></div>
@@ -240,7 +304,19 @@
                             <Ball number="7" handler={this.addPot}/>
                             <Ball number="-7" handler={this.addPot}/>
                         </div>
-                        <div className={'toolbar'}/>
+                        <div className={'toolbar'}>
+                            <div className='playerSwitcher' onClick={this.switchPlayer}>
+                                    <svg
+                                        height="403pt"
+                                        viewBox="0 -26 403.24 403"
+                                        width="403pt"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M327.785 134.543c3.922 3.89 10.254 3.863 14.145-.059l58.41-58.91c3.879-3.91 3.867-10.219-.028-14.11L341.898 3.052c-3.906-3.906-10.238-3.906-14.14 0-3.906 3.902-3.906 10.234 0 14.14l41.34 41.344H309.03a90.46 90.46 0 0 0-71.824 35.77l-48.488 64.222-48.489-64.222a90.467 90.467 0 0 0-71.824-35.77H10c-5.523 0-10 4.477-10 10 0 5.524 4.477 10 10 10h58.398a70.36 70.36 0 0 1 55.868 27.82l51.921 68.766-51.917 68.766a70.36 70.36 0 0 1-55.868 27.82H10c-5.523 0-10 4.477-10 10s4.477 10 10 10h58.398a90.474 90.474 0 0 0 71.829-35.77l48.492-64.218 48.488 64.222a90.463 90.463 0 0 0 71.828 35.77h60.067l-41.344 41.344c-3.906 3.906-3.906 10.238 0 14.14 3.902 3.907 10.234 3.907 14.14.004l58.414-58.414c3.895-3.894 3.907-10.203.028-14.113l-58.41-58.91a10.002 10.002 0 1 0-14.203 14.082l41.515 41.867h-60.215a70.359 70.359 0 0 1-55.863-27.82l-51.918-68.77 51.918-68.766a70.36 70.36 0 0 1 55.867-27.82h60.207l-41.511 41.867c-3.891 3.922-3.864 10.254.058 14.141zm0 0" />
+                                    </svg>
+                            </div>
+                            <div className={`playerSwitcher ${this.state.correcting ? 'correcting' : 'correction'}`} onClick={this.toggleCorrecting} >↺</div>
+                            <div className={`playerSwitcher reset`} onClick={this.resetScores} >Reset</div>
+                        </div>
                     </div>
                 }
             }
