@@ -57,9 +57,14 @@
 
             .potList {
                 display: flex;
-                border: solid 1px;
                 flex: 1;
                 background-color: lightslategray;
+            }
+
+            .potList.active{
+                background-color:rgb(139, 146, 163);
+                box-shadow: 0px -15px 36px -3px rgba(0, 0, 0, 0.5);
+                /*border: black dashed 2px;*/
             }
 
             .balls {
@@ -76,7 +81,7 @@
                 align-items: center;
                 justify-content: space-between;
                 flex: .75;
-                background-color: mediumvioletred;
+                background-color: lightgray ;
             }
 
             .ball {
@@ -147,6 +152,27 @@
                 background-color: brown;
             }
 
+            .potHistory {
+                display: flex;
+                min-height: 70px;
+                padding: 25px;
+            }
+
+            .potHistory ul, ol{
+                display: flex;
+                flex-flow: wrap;
+                list-style: none;
+            }
+
+            .potHistory li {
+                border-radius: 50%;
+                margin: 2px;
+                width: 45px;
+                height: 45px;
+            }
+
+            
+
         </style>
     </head>
     <body>
@@ -167,6 +193,26 @@
                 }
             }
 
+            class PotHistory extends React.Component{
+                constructor(props){
+                    super(props)
+                }
+
+                render(){
+                    return (
+                        <div className={'potHistory'}>
+                            <ul>
+                            {
+                                this.props.h.map((e, i) => {
+                                    return <li key={i} className={`b${e}`} onClick={ (e) =>  this.props.deletePot(i)}></li>
+                                })
+                            }
+                            </ul>
+                        </div>
+                    )
+                }
+            }
+
             class ScoreBoard extends React.Component{
                 constructor(props){
                     super(props);
@@ -181,6 +227,7 @@
                     this.toggleCorrecting = this.toggleCorrecting.bind(this)
                     this.resetScores = this.resetScores.bind(this)
                     this.switchPlayer = this.switchPlayer.bind(this)
+                    this.deletePot = this.deletePot.bind(this)
                 }
 
                 setState(s){
@@ -248,6 +295,19 @@
                     this.setState(newState)
                 }
 
+                deletePot(i){
+                    if( this.state.correcting ){
+                        let potHistory = this.state.p1Playing ? this.state.s1 : this.state.s2
+                        
+                        potHistory.splice(i, 1)
+                        
+                        this.toggleCorrecting()
+                        let state = {[this.state.p1Playing ? 's1' : 's2']: potHistory}
+                        state = Object.assign(this.updateScores(state), state)
+                        this.setState(state)
+                    }
+                }
+
                 updateScores(state){
                     let result = {}
 
@@ -292,8 +352,14 @@
                             </div>
                             <div className={`score-diff ${diffClassName}`}>{Math.abs(scoreDiff)}</div>
                         </div>
-                        <div className={'potList'}></div>
-                        <div className={'potList'}></div>
+                        <div className={`potList ${this.state.p1Playing ? 'active': ''}`}>
+                            {this.state.p1Name}
+                            <PotHistory h={this.state.s1} deletePot={this.deletePot}/>
+                        </div>
+                        <div className={`potList ${this.state.p1Playing ? '': 'active'}`}>
+                            {this.state.p2Name}
+                            <PotHistory h={this.state.s2} deletePot={this.deletePot}/>
+                        </div>
                         <div className={'balls'}>
                             <Ball number="1" handler={this.addPot}/>
                             <Ball number="2" handler={this.addPot}/>
