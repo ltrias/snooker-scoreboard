@@ -1,0 +1,120 @@
+<html>
+    <head>
+        <title>Placar Sinuca</title>
+        <meta charset="UTF-8"/>
+        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"/>
+
+        <style>
+
+            body {
+                margin: 0;
+                font-family: 'Varela Round'
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            .header{
+                display: flex;
+                flex: 0.5;
+                font-size: xx-large;
+                background-color: grey;
+                justify-content: center;
+            }
+
+            .scoreBoard {
+                display: flex;
+                flex: 2;
+                background-color: grey;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .scoreBoard .score-diff {
+                display: flex;
+                font-size: 100pt;
+                margin: 1%;
+            }
+
+            .potList {
+                display: flex;
+                border: solid 1px;
+                flex: 1;
+                background-color: lightslategray;
+            }
+
+            .balls {
+                display: flex;
+                flex: 1;
+                flex-wrap: wrap;
+                justify-content: space-evenly;
+                align-items: center;
+                background-color: lightgray;
+            }
+
+            .toolbar{
+                display: flex;
+                flex: 0.5;
+                background-color: mediumvioletred;
+            }
+
+            .ball {
+                height: 90px;
+                width: 90px;
+                border-radius: 50%;
+                margin-right: 10px;
+                margin-top: 10px;
+                box-shadow: 0px 3px 26px -3px rgba(0, 0, 0, 0.41);
+            }
+            
+            .b1 {background-color: rgb(244, 67, 54);}
+            .b2 {background-color: rgb(255, 241, 118);}
+            .b3 {background-color: rgb(124, 179, 66);}
+            .b4 {background-color: rgb(121, 85, 72);}
+            .b5 {background-color: rgb(2, 119, 189);}
+            .b6 {background-color: rgb(240, 98, 146);}
+            .b7 {background-color: rgba(0, 0, 0)}
+            .b-7 {background-color: rgb(102, 102, 102);}
+
+        </style>
+    </head>
+    <body>
+        <script src="https://unpkg.com/react@16/umd/react.development.js" ></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+    
+        <script type="text/babel">
+            class ScoreBoard extends React.Component{
+                render(){
+                    return <div className={'container'}>
+                        <div className={'header'}>Placar Sinuca</div>
+                        <div className={'scoreBoard'}>
+                            Jogador atual: Lucas<br/>
+                            Pontuação: 55 pontos
+                            <div className={'score-diff'}>-40</div>
+                        </div>
+                        <div className={'potList'}></div>
+                        <div className={'potList'}></div>
+                        <div className={'balls'}>
+                            <div className={'ball b1'}/>
+                            <div className={'ball b2'}/>
+                            <div className={'ball b3'}/>
+                            <div className={'ball b4'}/>
+                            <div className={'ball b5'}/>
+                            <div className={'ball b6'}/>
+                            <div className={'ball b7'}/>
+                            <div className={'ball b-7'}/>
+                        </div>
+                        <div className={'toolbar'}/>
+                    </div>
+                }
+            }
+
+            ReactDOM.render(<ScoreBoard/>, document.getElementById('scoreboard'));
+        </script>
+        <div id="scoreboard"></div>
+    </body>
+</html>
