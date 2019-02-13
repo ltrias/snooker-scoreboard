@@ -1,0 +1,384 @@
+<html>
+    <head>
+        <title>Placar Sinuca</title>
+        <meta charset="UTF-8"/>
+        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"/>
+
+        <style>
+
+            body {
+                margin: 0;
+                font-family: 'Varela Round'
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            .header{
+                display: flex;
+                flex: 0.5;
+                font-size: xx-large;
+                background-color: grey;
+                justify-content: center;
+            }
+
+            .scoreBoard {
+                display: flex;
+                flex: 2;
+                background-color: grey;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .scoreBoard .text {
+                display: flex;
+                flex-direction: column;
+                font-size: x-large;
+                flex-wrap: nowrap;
+            }
+
+            .playerName {
+                border-radius: 5px;
+                border-width:1px;
+                border-style: solid;
+                background-color: rgba(120, 144, 156);
+                border-color: rgba(100, 124, 136);
+                font-size: x-large;
+            }
+
+            .scoreBoard .score-diff {
+                display: flex;
+                font-size: 100pt;
+                margin: 1%;
+            }
+
+            .potList {
+                display: flex;
+                flex: 1;
+                background-color: lightslategray;
+            }
+
+            .potList.active{
+                background-color:rgb(139, 146, 163);
+                box-shadow: 0px -15px 36px -3px rgba(0, 0, 0, 0.5);
+                /*border: black dashed 2px;*/
+            }
+
+            .balls {
+                display: flex;
+                flex: 1;
+                flex-wrap: wrap;
+                justify-content: space-evenly;
+                align-items: center;
+                background-color: lightgray;
+            }
+
+            .toolbar{
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                flex: .75;
+                background-color: lightgray ;
+            }
+
+            .ball {
+                height: 90px;
+                width: 90px;
+                border-radius: 50%;
+                margin-right: 10px;
+                margin-top: 10px;
+                box-shadow: 0px 3px 26px -3px rgba(0, 0, 0, 0.41);
+            }
+            
+            .b1 {background-color: rgb(244, 67, 54)}
+            .b2 {background-color: rgb(255, 241, 118)}
+            .b3 {background-color: rgb(124, 179, 66)}
+            .b4 {background-color: rgb(121, 85, 72)}
+            .b5 {background-color: rgb(2, 119, 189)}
+            .b6 {background-color: rgb(240, 98, 146)}
+            .b7 {background-color: rgba(0, 0, 0)}
+            .b-7 {background-color: rgb(102, 102, 102)}
+
+            .winning {
+                color: darkgreen
+            }
+            
+            .loosing {
+                color: darkred
+            }
+
+            .playerSwitcher {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-items: center;
+                justify-content: center;
+                cursor: pointer;
+                -webkit-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+                -moz-box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+                box-shadow: 0px 2px 36px -3px rgba(0, 0, 0, 0.5);
+                background-color: #192e8f;
+                fill: aliceblue
+            }
+
+            .playerSwitcher svg {
+                margin: 25px 0px 25px 0px;
+                width: 30px;
+                height: 30px;
+                opacity: 0.3;
+            }
+
+            .correction {
+                background-color: rosybrown;
+            }
+
+            .correcting {
+                background-color: greenyellow;
+            }
+
+            .reset {
+                background-color: brown;
+            }
+
+            .potHistory {
+                display: flex;
+                min-height: 70px;
+                padding: 25px;
+            }
+
+            .potHistory ul, ol{
+                display: flex;
+                flex-flow: wrap;
+                list-style: none;
+            }
+
+            .potHistory li {
+                border-radius: 50%;
+                margin: 2px;
+                width: 45px;
+                height: 45px;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="https://unpkg.com/react@16/umd/react.development.js" ></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+    
+        <script type="text/babel">
+            const sum = (a, b) => Math.abs(parseInt(a)) + Math.abs(parseInt(b));
+
+            class Ball extends React.Component{
+                constructor(props) {
+                    super(props);
+                }
+
+                render(){
+                    return <div className={`ball b${this.props.number}`} onClick={ (e) => this.props.handler(this.props.number)}></div>
+                }
+            }
+
+            class PotHistory extends React.Component{
+                constructor(props){
+                    super(props)
+                }
+
+                render(){
+                    return (
+                        <div className={'potHistory'}>
+                            <ul>
+                            {
+                                this.props.h.map((e, i) => {
+                                    return <li key={i} className={`b${e}`} onClick={ (e) =>  this.props.deletePot(i)}></li>
+                                })
+                            }
+                            </ul>
+                        </div>
+                    )
+                }
+            }
+
+            class ScoreBoard extends React.Component{
+                constructor(props){
+                    super(props);
+
+                    let lastState = this.restoreState()
+                    let initialState = this.initialScoreState()
+
+                    this.state = Object.assign(initialState, {p1Name: "Jogador A", p2Name: "Jogador B"}, lastState)
+
+                    this.addPot = this.addPot.bind(this)
+                    this.updatePlayerName = this.updatePlayerName.bind(this)
+                    this.toggleCorrecting = this.toggleCorrecting.bind(this)
+                    this.resetScores = this.resetScores.bind(this)
+                    this.switchPlayer = this.switchPlayer.bind(this)
+                    this.deletePot = this.deletePot.bind(this)
+                }
+
+                setState(s){
+                    let newState = {}
+                    newState = Object.assign(newState, this.state, s)
+
+                    super.setState(s)
+                    
+                    document.cookie = "scoreboard_state=" + JSON.stringify(newState)
+                }
+
+                restoreState(){
+                    let cookie = document.cookie.replace(/.*scoreboard_state=({.*?}).*/, "$1")
+
+                    return cookie ? JSON.parse(cookie) : cookie
+                }
+
+                switchPlayer(){
+                    let currentlyPlaying = this.state.p1Playing;
+                    currentlyPlaying = !currentlyPlaying
+
+                    this.setState({p1Playing: currentlyPlaying})
+                }
+
+                initialScoreState(){
+                    return {
+                        s1: [],
+                        s2: [],
+                        p1Score: 0,
+                        p2Score: 0,
+                        p1Playing: true,
+                        correcting: false
+                    }
+                }
+
+                resetScores(){
+                    if( confirm("Quer resetar as pontuações?") ){
+                        this.setState(this.initialScoreState())
+                    }
+                }
+
+                addPot(n){
+                    let newState = {}
+
+                    if(n === "-7"){
+                        if(this.state.p1Playing){
+                            newState.s1 = this.state.s1 
+                            newState.s2 = this.state.s2.concat(n)
+                        } else{
+                            newState.s1 = this.state.s1.concat(n) 
+                            newState.s2 = this.state.s2
+                        }
+                    } else {
+                        if(this.state.p1Playing){
+                            newState.s1 = this.state.s1.concat(n)
+                            newState.s2 = this.state.s2
+                        }else{
+                            newState.s2 = this.state.s2.concat(n)
+                            newState.s1 = this.state.s1
+                        }
+                    }
+                    
+                    newState = Object.assign(this.updateScores(newState), newState)
+
+                    this.setState(newState)
+                }
+
+                deletePot(i){
+                    if( this.state.correcting ){
+                        let potHistory = this.state.p1Playing ? this.state.s1 : this.state.s2
+                        
+                        potHistory.splice(i, 1)
+                        
+                        this.toggleCorrecting()
+                        let state = {[this.state.p1Playing ? 's1' : 's2']: potHistory}
+                        state = Object.assign(this.updateScores(state), state)
+                        this.setState(state)
+                    }
+                }
+
+                updateScores(state){
+                    let result = {}
+
+                    if(state.s1) result.p1Score = state.s1.reduce(sum, 0)
+                    if(state.s2) result.p2Score = state.s2.reduce(sum, 0)
+
+                    return result
+                }
+
+                updatePlayerName(e){
+                    let name = e.target.value;
+                    this.setState({[this.state.p1Playing ? 'p1Name' : 'p2Name']: name })
+                }
+
+                toggleCorrecting(){
+                    this.setState({correcting: !this.state.correcting})
+                }
+
+                render(){
+                    let scoreDiff = this.state.p1Score - this.state.p2Score
+                    let diffClassName = ''
+                    if(scoreDiff > 0 ){
+                        if(this.state.p1Playing){
+                            diffClassName = 'winning'
+                        }else{
+                            diffClassName = 'loosing'
+                        }
+                    }else if(scoreDiff < 0){
+                        if(this.state.p1Playing){
+                            diffClassName = 'loosing'
+                        }else{
+                            diffClassName = 'winning'
+                        }
+                    }
+
+                    return <div className={'container'}>
+                        <div className={'header'}>Placar Sinuca</div>
+                        <div className={'scoreBoard'}>
+                            <div className={'text'}>
+                                <div>Jogador atual: <input type="text" className={'playerName'} value={`${this.state.p1Playing ? this.state.p1Name: this.state.p2Name}`} onChange={this.updatePlayerName}/></div><br/>
+                                <div>Pontuação: {this.state.p1Playing ? this.state.p1Score: this.state.p2Score} pontos</div>
+                            </div>
+                            <div className={`score-diff ${diffClassName}`}>{Math.abs(scoreDiff)}</div>
+                        </div>
+                        <div className={`potList ${this.state.p1Playing ? 'active': ''}`}>
+                            {this.state.p1Name}
+                            <PotHistory h={this.state.s1} deletePot={this.deletePot}/>
+                        </div>
+                        <div className={`potList ${this.state.p1Playing ? '': 'active'}`}>
+                            {this.state.p2Name}
+                            <PotHistory h={this.state.s2} deletePot={this.deletePot}/>
+                        </div>
+                        <div className={'balls'}>
+                            <Ball number="1" handler={this.addPot}/>
+                            <Ball number="2" handler={this.addPot}/>
+                            <Ball number="3" handler={this.addPot}/>
+                            <Ball number="4" handler={this.addPot}/>
+                            <Ball number="5" handler={this.addPot}/>
+                            <Ball number="6" handler={this.addPot}/>
+                            <Ball number="7" handler={this.addPot}/>
+                            <Ball number="-7" handler={this.addPot}/>
+                        </div>
+                        <div className={'toolbar'}>
+                            <div className='playerSwitcher' onClick={this.switchPlayer}>
+                                    <svg
+                                        height="403pt"
+                                        viewBox="0 -26 403.24 403"
+                                        width="403pt"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M327.785 134.543c3.922 3.89 10.254 3.863 14.145-.059l58.41-58.91c3.879-3.91 3.867-10.219-.028-14.11L341.898 3.052c-3.906-3.906-10.238-3.906-14.14 0-3.906 3.902-3.906 10.234 0 14.14l41.34 41.344H309.03a90.46 90.46 0 0 0-71.824 35.77l-48.488 64.222-48.489-64.222a90.467 90.467 0 0 0-71.824-35.77H10c-5.523 0-10 4.477-10 10 0 5.524 4.477 10 10 10h58.398a70.36 70.36 0 0 1 55.868 27.82l51.921 68.766-51.917 68.766a70.36 70.36 0 0 1-55.868 27.82H10c-5.523 0-10 4.477-10 10s4.477 10 10 10h58.398a90.474 90.474 0 0 0 71.829-35.77l48.492-64.218 48.488 64.222a90.463 90.463 0 0 0 71.828 35.77h60.067l-41.344 41.344c-3.906 3.906-3.906 10.238 0 14.14 3.902 3.907 10.234 3.907 14.14.004l58.414-58.414c3.895-3.894 3.907-10.203.028-14.113l-58.41-58.91a10.002 10.002 0 1 0-14.203 14.082l41.515 41.867h-60.215a70.359 70.359 0 0 1-55.863-27.82l-51.918-68.77 51.918-68.766a70.36 70.36 0 0 1 55.867-27.82h60.207l-41.511 41.867c-3.891 3.922-3.864 10.254.058 14.141zm0 0" />
+                                    </svg>
+                            </div>
+                            <div className={`playerSwitcher ${this.state.correcting ? 'correcting' : 'correction'}`} onClick={this.toggleCorrecting} >↺</div>
+                            <div className={`playerSwitcher reset`} onClick={this.resetScores} >Reset</div>
+                        </div>
+                    </div>
+                }
+            }
+
+            ReactDOM.render(<ScoreBoard/>, document.getElementById('scoreboard'));
+        </script>
+        <div id="scoreboard"></div>
+    </body>
+</html>
