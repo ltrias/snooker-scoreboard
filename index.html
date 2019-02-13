@@ -33,6 +33,22 @@
                 justify-content: space-between;
             }
 
+            .scoreBoard .text {
+                display: flex;
+                flex-direction: column;
+                font-size: x-large;
+                flex-wrap: nowrap;
+            }
+
+            .playerName {
+                border-radius: 5px;
+                border-width:1px;
+                border-style: solid;
+                background-color: rgba(120, 144, 156);
+                border-color: rgba(100, 124, 136);
+                font-size: x-large;
+            }
+
             .scoreBoard .score-diff {
                 display: flex;
                 font-size: 100pt;
@@ -70,14 +86,22 @@
                 box-shadow: 0px 3px 26px -3px rgba(0, 0, 0, 0.41);
             }
             
-            .b1 {background-color: rgb(244, 67, 54);}
-            .b2 {background-color: rgb(255, 241, 118);}
-            .b3 {background-color: rgb(124, 179, 66);}
-            .b4 {background-color: rgb(121, 85, 72);}
-            .b5 {background-color: rgb(2, 119, 189);}
-            .b6 {background-color: rgb(240, 98, 146);}
+            .b1 {background-color: rgb(244, 67, 54)}
+            .b2 {background-color: rgb(255, 241, 118)}
+            .b3 {background-color: rgb(124, 179, 66)}
+            .b4 {background-color: rgb(121, 85, 72)}
+            .b5 {background-color: rgb(2, 119, 189)}
+            .b6 {background-color: rgb(240, 98, 146)}
             .b7 {background-color: rgba(0, 0, 0)}
-            .b-7 {background-color: rgb(102, 102, 102);}
+            .b-7 {background-color: rgb(102, 102, 102)}
+
+            .winning {
+                color: darkgreen
+            }
+            
+            .loosing {
+                color: darkred
+            }
 
         </style>
     </head>
@@ -87,6 +111,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
     
         <script type="text/babel">
+            const sum = (a, b) => parseInt(a) + parseInt(b);
 
             class Ball extends React.Component{
                 constructor(props) {
@@ -99,13 +124,109 @@
             }
 
             class ScoreBoard extends React.Component{
+                constructor(props){
+                    super(props);
+
+                    let lastState = this.restoreState()
+                    let initialState = this.initialScoreState()
+
+                    this.state = Object.assign(initialState, {p1Name: "Jogador A", p2Name: "Jogador B"}, lastState)
+
+                    this.addPot = this.addPot.bind(this)
+                    this.updatePlayerName = this.updatePlayerName.bind(this)
+                }
+
+                setState(s){
+                    let newState = {}
+                    newState = Object.assign(newState, this.state, s)
+
+                    super.setState(s)
+                    
+                    document.cookie = "scoreboard_state=" + JSON.stringify(newState)
+                }
+
+                restoreState(){
+                    let cookie = document.cookie.replace(/.*scoreboard_state=({.*?}).*/, "$1")
+
+                    return cookie ? JSON.parse(cookie) : cookie
+                }
+
+                initialScoreState(){
+                    return {
+                        s1: [],
+                        s2: [],
+                        p1Score: 0,
+                        p2Score: 0,
+                        p1Playing: true,
+                        correcting: false
+                    }
+                }
+
+                addPot(n){
+                    let newState = {}
+
+                    if(n === "-7"){
+                        if(this.state.p1Playing){
+                            newState.s2 = this.state.s2.concat(n * -1)
+                            newState.s1 = this.state.s1 
+                        } else{
+                            newState.s1 = this.state.s1.concat(n * -1) 
+                            newState.s2 = this.state.s2
+                        }
+                    } else {
+                        if(this.state.p1Playing){
+                            newState.s1 = this.state.s1.concat(n)
+                            newState.s2 = this.state.s2
+                        }else{
+                            newState.s2 = this.state.s2.concat(n)
+                            newState.s1 = this.state.s1
+                        }
+                    }
+                    
+                    newState = Object.assign(this.updateScores(newState), newState)
+
+                    this.setState(newState)
+                }
+
+                updateScores(state){
+                    let result = {}
+
+                    if(state.s1) result.p1Score = state.s1.reduce(sum, 0)
+                    if(state.s2) result.p2Score = state.s2.reduce(sum, 0)
+
+                    return result
+                }
+
+                updatePlayerName(e){
+                    let name = e.target.value;
+                    this.setState({[this.state.p1Playing ? 'p1Name' : 'p2Name']: name })
+                }
+
                 render(){
+                    let scoreDiff = this.state.p1Score - this.state.p2Score
+                    let diffClassName = ''
+                    if(scoreDiff > 0 ){
+                        if(this.state.p1Playing){
+                            diffClassName = 'winning'
+                        }else{
+                            diffClassName = 'loosing'
+                        }
+                    }else if(scoreDiff < 0){
+                        if(this.state.p1Playing){
+                            diffClassName = 'loosing'
+                        }else{
+                            diffClassName = 'winning'
+                        }
+                    }
+
                     return <div className={'container'}>
                         <div className={'header'}>Placar Sinuca</div>
                         <div className={'scoreBoard'}>
-                            Jogador atual: Lucas<br/>
-                            Pontuação: 55 pontos
-                            <div className={'score-diff'}>-40</div>
+                            <div className={'text'}>
+                                <div>Jogador atual: <input type="text" className={'playerName'} value={`${this.state.p1Playing ? this.state.p1Name: this.state.p2Name}`} onChange={this.updatePlayerName}/></div><br/>
+                                <div>Pontuação: {this.state.p1Playing ? this.state.p1Score: this.state.p2Score} pontos</div>
+                            </div>
+                            <div className={'score-diff'}>{Math.abs(scoreDiff)}</div>
                         </div>
                         <div className={'potList'}></div>
                         <div className={'potList'}></div>
