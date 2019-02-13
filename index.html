@@ -87,6 +87,17 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
     
         <script type="text/babel">
+
+            class Ball extends React.Component{
+                constructor(props) {
+                    super(props);
+                }
+
+                render(){
+                    return <div className={`ball b${this.props.number}`} onClick={ (e) => this.props.handler(this.props.number)}></div>
+                }
+            }
+
             class ScoreBoard extends React.Component{
                 render(){
                     return <div className={'container'}>
@@ -99,14 +110,14 @@
                         <div className={'potList'}></div>
                         <div className={'potList'}></div>
                         <div className={'balls'}>
-                            <div className={'ball b1'}/>
-                            <div className={'ball b2'}/>
-                            <div className={'ball b3'}/>
-                            <div className={'ball b4'}/>
-                            <div className={'ball b5'}/>
-                            <div className={'ball b6'}/>
-                            <div className={'ball b7'}/>
-                            <div className={'ball b-7'}/>
+                            <Ball number="1" handler={this.addPot}/>
+                            <Ball number="2" handler={this.addPot}/>
+                            <Ball number="3" handler={this.addPot}/>
+                            <Ball number="4" handler={this.addPot}/>
+                            <Ball number="5" handler={this.addPot}/>
+                            <Ball number="6" handler={this.addPot}/>
+                            <Ball number="7" handler={this.addPot}/>
+                            <Ball number="-7" handler={this.addPot}/>
                         </div>
                         <div className={'toolbar'}/>
                     </div>
