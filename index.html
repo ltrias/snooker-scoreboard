@@ -163,9 +163,6 @@
                 width: 45px;
                 height: 45px;
             }
-
-            
-
         </style>
     </head>
     <body>
@@ -174,7 +171,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
     
         <script type="text/babel">
-            const sum = (a, b) => parseInt(a) + parseInt(b);
+            const sum = (a, b) => Math.abs(parseInt(a)) + Math.abs(parseInt(b));
 
             class Ball extends React.Component{
                 constructor(props) {
@@ -267,10 +264,10 @@
 
                     if(n === "-7"){
                         if(this.state.p1Playing){
-                            newState.s2 = this.state.s2.concat(n * -1)
                             newState.s1 = this.state.s1 
+                            newState.s2 = this.state.s2.concat(n)
                         } else{
-                            newState.s1 = this.state.s1.concat(n * -1) 
+                            newState.s1 = this.state.s1.concat(n) 
                             newState.s2 = this.state.s2
                         }
                     } else {
