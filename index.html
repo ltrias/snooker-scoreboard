@@ -110,7 +110,7 @@
                 color: darkred
             }
 
-            .playerSwitcher {
+            .toolbar-button {
                 width: 80px;
                 height: 80px;
                 border-radius: 50%;
@@ -369,8 +369,8 @@
                             <Ball number="-7" handler={this.addPot}/>
                         </div>
                         <div className={'toolbar'}>
-                            <div className={`playerSwitcher ${this.state.correcting ? 'correcting' : 'correction'}`} onClick={this.toggleCorrecting} >↺</div>
-                            <div className={`playerSwitcher reset`} onClick={this.resetScores} >Reset</div>
+                            <div className={`toolbar-button ${this.state.correcting ? 'correcting' : 'correction'}`} onClick={this.toggleCorrecting} >↺</div>
+                            <div className={`toolbar-button reset`} onClick={this.resetScores} >Reset</div>
                         </div>
                     </div>
                 }
