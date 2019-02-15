@@ -7,8 +7,7 @@
         <style>
 
             body {
-                margin: 2%;
-                
+                margin: 2%;                
                 font-family: 'Varela Round'
             }
 
@@ -20,7 +19,7 @@
 
             .header{
                 display: flex;
-                font-size: xx-large;
+                font-size: 5em;
                 background-color: grey;
                 justify-content: space-between;
             }
@@ -31,8 +30,8 @@
             }
 
             .toolbar-button {
-                width: 50px;
-                height: 50px;
+                width: 90px;
+                height: 90px;
                 border-radius: 50%;
                 margin: 10px;
                 display: flex;
@@ -59,7 +58,7 @@
             .scoreBoard .text {
                 display: flex;
                 flex-direction: column;
-                font-size: x-large;
+                font-size: 6em;
                 flex-wrap: nowrap;
             }
 
@@ -74,7 +73,7 @@
 
             .scoreBoard .score-diff {
                 display: flex;
-                font-size: 100pt;
+                font-size: 10em;
                 margin: 1%;
             }
 
@@ -82,6 +81,7 @@
                 display: flex;
                 flex: 1;
                 background-color: lightslategray;
+                font-size: 3em;
             }
 
             .potList.active{
@@ -92,7 +92,7 @@
 
             .balls {
                 display: flex;
-                flex: 1;
+                flex: .6;
                 flex-wrap: wrap;
                 justify-content: space-evenly;
                 align-items: center;
@@ -100,11 +100,11 @@
             }
 
             .ball {
-                height: 90px;
-                width: 90px;
+                height: 110px;
+                width: 110px;
                 border-radius: 50%;
-                margin-right: 10px;
-                margin-top: 10px;
+                margin-right: 5px;
+                margin-top: 5px;
                 box-shadow: 0px 3px 26px -3px rgba(0, 0, 0, 0.41);
             }
             
@@ -315,8 +315,10 @@
                 }
 
                 updatePlayerName(e){
-                    let name = e.target.value;
-                    this.setState({[this.state.p1Playing ? 'p1Name' : 'p2Name']: name })
+                    let name = prompt("Nome do jogador", e.target.textContent)
+                    if( name != null && name !=="" ){
+                        this.setState({[this.state.p1Playing ? 'p1Name' : 'p2Name']: name })
+                    }
                 }
 
                 toggleCorrecting(){
@@ -349,8 +351,8 @@
                         </div>
                         <div className={'scoreBoard'}>
                             <div className={'text'}>
-                                <div>Jogador atual: <input type="text" className={'playerName'} value={`${this.state.p1Playing ? this.state.p1Name: this.state.p2Name}`} onChange={this.updatePlayerName}/></div><br/>
-                                <div>Pontuação: {this.state.p1Playing ? this.state.p1Score: this.state.p2Score} pontos</div>
+                                <div onClick={this.updatePlayerName}>{this.state.p1Playing ? this.state.p1Name: this.state.p2Name}</div><br/>
+                                <div>{this.state.p1Playing ? this.state.p1Score: this.state.p2Score} pontos</div>
                             </div>
                             <div className={`score-diff ${diffClassName}`}>{Math.abs(scoreDiff)}</div>
                         </div>
